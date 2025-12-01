@@ -1,0 +1,36 @@
+# Development and editor files
+.devcontainer/
+.vscode/
+.editorconfig
+.prettierrc.cjs
+.prettierignore
+vscode.tailwind.json
+
+# GitHub specific
+.github/
+
+# Documentation
+README.md
+LICENSE.md
+
+# Local development
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Cache directories
+cache/
+.astro/
+
+# Config files not needed for build
+sandbox.config.json
+eslint.config.js
+
+# Git
+.git/
+.gitignore
+
+# Lock files (Vercel uses package-lock.json)
+pnpm-lock.yaml
