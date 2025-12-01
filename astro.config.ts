@@ -84,7 +84,7 @@ export default defineConfig({
     }),
 
     astrowind({
-      config: './src/config.yaml',
+      config: 'src/config.yaml',
     }),
 
     pagefind()
@@ -115,6 +115,6 @@ export default defineConfig({
   },
 
   adapter: vercel({
-    excludeFiles: ['./src/data/posts/*-animated.webp'],
+    excludeFiles: ['src/data/posts/*-animated.webp'],
   }),
 });
