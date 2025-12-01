@@ -119,7 +119,7 @@ sudo apt update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-![Installing Docker GIF](caddy_docker-install-animated.webp)
+![Installing Docker GIF](/posts/2023/12/04/caddy_docker-install-animated.webp)
 <ImgDesc>Installing Docker</ImgDesc>
 
 Now, I like to create a dedicated user to run containers in my lab. This is not a recommended method and is optional since it can be dangerous, unless you run Docker root-less as noted in the [docs](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user). This guide will not be covering how to do a root-less docker user, but it is definitely the recommended route. It does come with some limitations as noted [here](https://docs.docker.com/engine/security/rootless/#known-limitations) though. For the time being we are going to add our current user to the docker group, so we can omit `sudo` in every command from here on out.
@@ -419,12 +419,12 @@ Now click on the "+ Create a tunnel" button on the Tunnels overview page.
 
 Follow the wizard to create the tunnel. Give it a name and copy the Docker run command on the next page.
 
-![Cloudflare Tunnel Creation Wizard Part 1](caddy_cf_tunnel-setup-1-animated.webp)
+![Cloudflare Tunnel Creation Wizard Part 1](/posts/2023/12/04/caddy_cf_tunnel-setup-1-animated.webp)
 <ImgDesc>First Part of the Tunnel Creation Wizard</ImgDesc>
 
 Take the command and paste it into notepad. Delete everything but the token and then copy the token.
 
-![Edit Docker Run Command for the Tunnel](caddy_cf_copy-token-animated.webp)
+![Edit Docker Run Command for the Tunnel](/posts/2023/12/04/caddy_cf_copy-token-animated.webp)
 <ImgDesc>Editing the Docker Run Command for the Tunnel</ImgDesc>
 
 Now return to your host and edit the `.env` file in the `/cloudflare` directory. Copy the following into the file. Replace my demo token with the one you copied earlier.
@@ -440,7 +440,7 @@ Save and close the file. Your `/cloudflare` directory should look like the follo
 
 In the `/cloudflare` directory run `docker compose -f cloudflare.yml up`. If you watch the Tunnel Wizard you can see the local tunnel connect to Cloudflare in the lower box labeled "Connectors."
 
-![Local Tunnel Connecting to Cloudflare](caddy_cf_tunnel-connect-animated.webp)
+![Local Tunnel Connecting to Cloudflare](/posts/2023/12/04/caddy_cf_tunnel-connect-animated.webp)
 <ImgDesc>Local Tunnel Connecting to Cloudflare</ImgDesc>
 
 Once the tunnel is connected. Hit `CTRL + C` to terminate the Cloudflare container. Then re-run `docker compose -f cloudflare.yml up -d`. The `-d` argument runs the container in 'detach mode' so that it can run in the background. By running `docker ps` you can verify if it is up and running.

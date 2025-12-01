@@ -114,7 +114,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  adapter: vercel({
-    excludeFiles: ['src/data/posts/*-animated.webp'],
-  }),
+  adapter: vercel(),
 });

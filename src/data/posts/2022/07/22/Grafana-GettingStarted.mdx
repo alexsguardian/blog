@@ -17,8 +17,6 @@ comments: true
 import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
 import { Image } from 'astro:assets'
-import SETUP_REMOTE_SSH from 'grafana-setup_remote_SSH-animated.webp'
-import DOCKER_SETUP from 'grafana-Docker-Setup-animated.webp'
 import DOCKER_VERSION from 'grafana-Docker_EngComp_Version.webp'
 import VSC_RESTRICTED from 'grafana-vsc_restricted_mode.webp'
 import LOGIN_SCREEN from 'grafana-login_screen.webp'
@@ -92,7 +90,7 @@ I like to keep SSH hosts for VSC separate from my main config file. You do not h
 VSC will set up code server on your machine on first log in. The progress will be displayed in a notification in the lower right. When this is complete you can start using VSC to navigate and edit files on your System. As long as you have the correct permissions.
 </Aside>
 
-<Image src={SETUP_REMOTE_SSH} alt="Setting up Remote SSH" width={1920} />
+![Setting up Remote SSH](/posts/2022/07/22/grafana-setup_remote_SSH-animated.webp)
 <ImgDesc>Setting up the Remote SSH extension for VSC</ImgDesc>
 
 ## Installing Docker
@@ -151,7 +149,7 @@ sudo usermod -aG docker yourusername
 It is usually recommended that you log out of your session and log back in to make sure your user was properly updated. To do this via the Remote - SSH plugin, click on the green button in the lower left and then click "Close Remote Connection." You can then use the same flow from the steps above to log back into the machine via VSC.
 </Aside>
 
-<Image src={DOCKER_SETUP} alt="Docker Setup" width={1920} />
+![Docker Setup](/posts/2022/07/22/grafana-Docker-Setup-animated.webp)
 
 We can check if Docker Engine and Docker Compose were installed properly by running their version commands.
 

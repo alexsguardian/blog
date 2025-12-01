@@ -14,7 +14,6 @@ comments: true
 import { Image } from 'astro:assets'
 import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
-import DISCORD_SSH_LOGGING from 'discord-ssh-logging-animated.webp'
 
 So in an effort to get better at log monitoring, especially for SSH, I decided to setup automatic login/logout webhook notifications. Since I already use Discord for gaming, etc. I figured it would be easy to set up a private server for just my homelab and have everything log to it. I ended up using pam.d to invoke a script that handles the webhook.
 
@@ -30,7 +29,7 @@ If you are looking for a self hosted alternative take a look at my ntfy.sh post,
 
 Now I am going to assume that you already have a Discord account, if not you can sign up [here](https://discord.com/register), and you have a server setup with a text channel already created. To create the webhook, hover over the text channel you want to use and click on the settings gear. In the channel settings click on "Integrations" and then on "Webhooks". Click "New Webhook" and change the name to something you will recognize. Then click "Copy Webhook URL" and paste it into notepad so we have it for later. You can then save and exit the channel settings view.
 
-![How to create a Discord webhook GIF](discord-webhook-creation-animated.webp)
+![How to create a Discord webhook GIF](/posts/2022/07/02/discord-webhook-creation-animated.webp)
 <ImgDesc>Creating a Discord webhook through the channel settings</ImgDesc>
 
 # Configuring SSH to Use the Webhook
