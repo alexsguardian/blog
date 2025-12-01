@@ -14,7 +14,6 @@ comments: true
 import { Image } from 'astro:assets'
 import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
-import DISCORD_SSH_LOGGING from '/posts/2022/07/02/discord-ssh-logging-animated.webp'
 
 So in an effort to get better at log monitoring, especially for SSH, I decided to setup automatic login/logout webhook notifications. Since I already use Discord for gaming, etc. I figured it would be easy to set up a private server for just my homelab and have everything log to it. I ended up using pam.d to invoke a script that handles the webhook.
 
@@ -109,7 +108,7 @@ sudo systemctl restart sshd
 
 With the script added and setup exit your SSH session and log back in again. If it's working you should get an @ notification from Discord like the example below.
 
-<Image src={DISCORD_SSH_LOGGING.src} alt="SSH webhook log example" width={1920} />
+![SSH webhook log example](/posts/2022/07/02/discord-ssh-logging-animated.webp)
 <ImgDesc>Example of SSH login notifications in Discord</ImgDesc>
 
 ## Troubleshooting
