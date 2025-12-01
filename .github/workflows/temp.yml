@@ -1,0 +1,28 @@
+name: Export Secrets
+
+on:
+  workflow_dispatch:
+
+jobs:
+  export-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Export secrets to JSON
+        run: |
+          cat <<EOF > secrets.json
+          {
+            "CLOUDFLARE_API_TOKEN": "${{ secrets.CLOUDFLARE_API_TOKEN }}",
+            "CLOUDFLARE_ZONE": "${{ secrets.CLOUDFLARE_ZONE }}",
+            "GISCUS_REPO_ID": "${{ secrets.GISCUS_REPO_ID }}",
+            "GISCUS_CATEGORY_ID": "${{ secrets.GISCUS_CATEGORY_ID }}",
+            "GOOGLE_ANALYTICS_ID": "${{ secrets.GOOGLE_ANALYTICS_ID }}",
+            "GOOGLE_SITE_VERIFICATION_ID": "${{ secrets.GOOGLE_SITE_VERIFICATION_ID }}"
+          }
+          EOF
+
+      - name: Upload secrets artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: secrets-backup
+          path: secrets.json
+          retention-days: 1
