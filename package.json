@@ -31,7 +31,7 @@
     "@fontsource-variable/lexend": "^5.2.6",
     "@fontsource-variable/lora": "^5.1.1",
     "@fontsource/roboto": "^5.1.1",
-    "@tailwindcss/vite": "^4.0.9",
+    "@tailwindcss/vite": "^4.1.17",
     "astro": "^5.4.0",
     "astro-embed": "^0.9.0",
     "astro-expressive-code": "^0.40.2",
