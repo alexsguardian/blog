@@ -17,8 +17,8 @@ comments: true
 import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
 import { Image } from 'astro:assets'
-import SETUP_REMOTE_SSH from 'grafana-setup_remote_SSH.webp'
-import DOCKER_SETUP from 'grafana-Docker-Setup.webp'
+import SETUP_REMOTE_SSH from 'grafana-setup_remote_SSH-animated.webp'
+import DOCKER_SETUP from 'grafana-Docker-Setup-animated.webp'
 import DOCKER_VERSION from 'grafana-Docker_EngComp_Version.webp'
 import VSC_RESTRICTED from 'grafana-vsc_restricted_mode.webp'
 import LOGIN_SCREEN from 'grafana-login_screen.webp'
@@ -70,13 +70,13 @@ First thing we need to do is hook up Visual Studio Code (VSC) to the machine we 
 I like to keep SSH hosts for VSC separate from my main config file. You do not have to do this if you want to use the default `config` file for SSH.
 </Aside>
 
-4. Open Visual Studio Code and click on Extensions in the navigation column on the left. 
+4. Open Visual Studio Code and click on Extensions in the navigation column on the left.
 5. Under "Installed Extensions" find "Remote - SSH" and click on the settings gear then extension setting.
 6. In the field labeled "Remote.SSH: Config File" add the location of your SSH config file.
   - If you created the file above it will be `C:\Users\<username>\.ssh\vsc_config`
   - If you are using your default ssh config file then the path will be `C:\Users\<username>\.ssh\config`
 7. Close the settings Window
-8. Click on the green icon in the lower left 
+8. Click on the green icon in the lower left
 9. In the dropdown at the top click on "Connect Current Window to Host..."
 10. Click on "+ Add New SSH Host..."
 11. Enter your connection string for the Grafana host machine.
@@ -371,4 +371,4 @@ After you click Import, you will be taken to your new dashboard! You can now exp
 
 In an effort to keep this guide series easy to follow, I have broken it up into a series of posts. This is just part 1! The [next part](/posts/2022/09/17/Grafana-InfluxDB) we will be covering InfluxDB and Telegraf. As always if you run into any issues let me know down below or reach out via email!
 
-*Thanks to my good friend [Stefan](https://github.com/StefanMarAntonsson) for helping proof this post!* 
+*Thanks to my good friend [Stefan](https://github.com/StefanMarAntonsson) for helping proof this post!*

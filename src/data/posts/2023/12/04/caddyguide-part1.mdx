@@ -26,7 +26,7 @@ Exposing internal services to the internet comes with its own risks. It is highl
 
 Ever wondered how to expose your home network services securely? It's the classic tech puzzler. You could use a VPN[^1] to tunnel into your network, but that requires you to have the connection enabled and running. You could also use an SSH Tunnel[^2] or a bastion server[^3]. Though, this requires your remote device to have the ability to SSH. Now there is another way: Reverse Proxy[^4]! A reverse proxy sits in front of your backend services and forwards incoming web requests to them. This can also help increase security, since you are not exposing the service directly. Now the downside is that you still have to forward ports 80/443 (HTTP/HTTPS) through your firewall. However, this can potentially leave your network vulnerable to port attacks. This can be mitigated with [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/).
 
-Cloudflare Tunnel acts as an encrypted tunnel between your server and the nearest Cloudflare data center. It requires no ports to be forwarded through the firewall. This guide series will focus on utilizing Cloudflare Tunnel with [Caddy](https://caddyserver.com) to serve / secure services hosted in Docker. It will be broken into 3 parts, so it's not too long and easier to read through. I will be walking you through the bare minimum with a few extra security options. I recommend you do your own research as well since things change all the time. 
+Cloudflare Tunnel acts as an encrypted tunnel between your server and the nearest Cloudflare data center. It requires no ports to be forwarded through the firewall. This guide series will focus on utilizing Cloudflare Tunnel with [Caddy](https://caddyserver.com) to serve / secure services hosted in Docker. It will be broken into 3 parts, so it's not too long and easier to read through. I will be walking you through the bare minimum with a few extra security options. I recommend you do your own research as well since things change all the time.
 
 *Sorry for the wall of text but doing something like this requires a lot of information, and I'm hoping to make it easy to follow for people that are just starting out and want to learn.*
 
@@ -44,7 +44,7 @@ Listed on the [Guides'](/guides) page as well.
 
 ## Registering a Domain with Cloudflare
 
-The first few things we need to tackle are getting a domain registered and our host setup with Docker. After that we can start setting up services, Caddy, and Cloudflare Tunnels. We are going to start off with registering the domain. Now, I highly recommend using Cloudflare for this as it will make it extremely easy to set up the tunnel later. 
+The first few things we need to tackle are getting a domain registered and our host setup with Docker. After that we can start setting up services, Caddy, and Cloudflare Tunnels. We are going to start off with registering the domain. Now, I highly recommend using Cloudflare for this as it will make it extremely easy to set up the tunnel later.
 
 <Aside type="note">
 There are other registrars[^6] you can use if you want, though I will not be covering configs for them in this series.
@@ -55,7 +55,7 @@ In order to register a new domain with Cloudflare. You first need to create an a
 ![Cloudflare Sign up Page](caddy_cf_signup.webp)
 <ImgDesc>Cloudflare Sign up Page</ImgDesc>
 
-Once you are set up with an account, [sign in](https://dash.cloudflare.com/login?lang=en-US) and head to the billing > payment info section of your profile. Fill in your payment method and a billing address. 
+Once you are set up with an account, [sign in](https://dash.cloudflare.com/login?lang=en-US) and head to the billing > payment info section of your profile. Fill in your payment method and a billing address.
 
 ![Cloudflare Billing Info](caddy_cf_billing.webp)
 <ImgDesc>Cloudflare Billing Info</ImgDesc>
@@ -65,7 +65,7 @@ Then head back to the dashboard and enter the domain registration page.
 ![Cloudflare Domain Registering Menu](caddy_cf_dash.webp)
 <ImgDesc>Cloudflare Domain Registering Menu</ImgDesc>
 
-On the Register Domain page, search for a domain you'd like to use. When you find one, click on the "Purchase" link and check out. Follow the checkout process. 
+On the Register Domain page, search for a domain you'd like to use. When you find one, click on the "Purchase" link and check out. Follow the checkout process.
 
 ![Cloudflare Domain Registering](caddy_cf_register-domain.webp)
 <ImgDesc>Cloudflare Domain Registering</ImgDesc>
@@ -119,7 +119,7 @@ sudo apt update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-![Installing Docker GIF](caddy_docker-install.webp)
+![Installing Docker GIF](caddy_docker-install-animated.webp)
 <ImgDesc>Installing Docker</ImgDesc>
 
 Now, I like to create a dedicated user to run containers in my lab. This is not a recommended method and is optional since it can be dangerous, unless you run Docker root-less as noted in the [docs](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user). This guide will not be covering how to do a root-less docker user, but it is definitely the recommended route. It does come with some limitations as noted [here](https://docs.docker.com/engine/security/rootless/#known-limitations) though. For the time being we are going to add our current user to the docker group, so we can omit `sudo` in every command from here on out.
@@ -277,7 +277,7 @@ chmod +x ./cf.sh
 chmod +x ./reload.sh
 ```
 
-Now run the `cf.sh` script to generate the `cloudflare-proxies` file in `/configs/`. 
+Now run the `cf.sh` script to generate the `cloudflare-proxies` file in `/configs/`.
 
 ```shell showLineNumbers=false
 bash cf.sh
@@ -419,12 +419,12 @@ Now click on the "+ Create a tunnel" button on the Tunnels overview page.
 
 Follow the wizard to create the tunnel. Give it a name and copy the Docker run command on the next page.
 
-![Cloudflare Tunnel Creation Wizard Part 1](caddy_cf_tunnel-setup-1.webp)
+![Cloudflare Tunnel Creation Wizard Part 1](caddy_cf_tunnel-setup-1-animated.webp)
 <ImgDesc>First Part of the Tunnel Creation Wizard</ImgDesc>
 
-Take the command and paste it into notepad. Delete everything but the token and then copy the token. 
+Take the command and paste it into notepad. Delete everything but the token and then copy the token.
 
-![Edit Docker Run Command for the Tunnel](caddy_cf_copy-token.webp)
+![Edit Docker Run Command for the Tunnel](caddy_cf_copy-token-animated.webp)
 <ImgDesc>Editing the Docker Run Command for the Tunnel</ImgDesc>
 
 Now return to your host and edit the `.env` file in the `/cloudflare` directory. Copy the following into the file. Replace my demo token with the one you copied earlier.
@@ -440,7 +440,7 @@ Save and close the file. Your `/cloudflare` directory should look like the follo
 
 In the `/cloudflare` directory run `docker compose -f cloudflare.yml up`. If you watch the Tunnel Wizard you can see the local tunnel connect to Cloudflare in the lower box labeled "Connectors."
 
-![Local Tunnel Connecting to Cloudflare](caddy_cf_tunnel-connect.webp)
+![Local Tunnel Connecting to Cloudflare](caddy_cf_tunnel-connect-animated.webp)
 <ImgDesc>Local Tunnel Connecting to Cloudflare</ImgDesc>
 
 Once the tunnel is connected. Hit `CTRL + C` to terminate the Cloudflare container. Then re-run `docker compose -f cloudflare.yml up -d`. The `-d` argument runs the container in 'detach mode' so that it can run in the background. By running `docker ps` you can verify if it is up and running.
@@ -460,7 +460,7 @@ If you change the service name for Caddy in the `caddy.yml` file, or you are usi
 ![Route tunnel example](caddy_cf_tunnel-route.webp)
 <ImgDesc>Route tunnel example</ImgDesc>
 
-Under the "Additional application settings", select TLS and then input your domain name into the "Origin Server Name" field. 
+Under the "Additional application settings", select TLS and then input your domain name into the "Origin Server Name" field.
 
 ![Tunnel SNI config](caddy_cf_tunnel-sni.webp)
 <ImgDesc>Tunnel SNI config</ImgDesc>
@@ -486,4 +486,4 @@ If you return to the [main dashboard](https://dash.cloudflare.com/), select your
 [^5]: [Wikipedia: Domain Name Registrar](https://en.wikipedia.org/wiki/Domain_name_registrar)
 [^6]: [List of Domain Name Registrars](https://en.wikipedia.org/wiki/List_of_domain_name_registrars)
 [^7]: [Caddy DNS Module](https://caddyserver.com/docs/modules/dns)
-[^8]: [Let's Encrypt: DNS Challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge) 
+[^8]: [Let's Encrypt: DNS Challenge](https://letsencrypt.org/docs/challenge-types/#dns-01-challenge)
