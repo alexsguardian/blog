@@ -50,16 +50,16 @@ import { UI } from 'astrowind:config';
       // Show button after scrolling down 250px and position above footer
       const toggleBackToTop = () => {
         const footer = document.querySelector('footer');
-        
+
         if (window.scrollY > 250) {
           container.classList.remove('opacity-0', 'invisible');
           container.classList.add('opacity-100');
-          
+
           // Position above footer if scrolled to footer area
           // if (footer) {
           //   const footerRect = footer.getBoundingClientRect();
           //   const footerVisible = footerRect.top < window.innerHeight;
-            
+
           //   if (footerVisible) {
           //     const bottomPosition = window.innerHeight - footerRect.top + 20; // 20px extra space
           //     container.style.bottom = `${bottomPosition}px`;
@@ -218,28 +218,6 @@ import { UI } from 'astrowind:config';
     document.getElementById('header')?.classList.remove('expanded');
     document.querySelector('#header nav')?.classList.add('hidden');
 
-    // giscus thingie here
-    // if (document.querySelector('#gsc')) {
-    // document.querySelector('#gsc')?.appendChild(
-    //   Object.assign(document.createElement('script'), {
-    //     src: 'https://giscus.app/client.js',
-    //     'data-repo': 'alexandzors/blog-comments',
-    //     'data-repo-id': '${REPLACE_ME_REPO}',
-    //     'data-category': 'blog-comments',
-    //     'data-category-id': '${REPLACE_ME_CAT}',
-    //     'data-mapping': 'title',
-    //     'data-strict': '0',
-    //     'data-reactions-enabled': '1',
-    //     'data-emit-metadata': '0',
-    //     'data-input-position': 'top',
-    //     'data-theme': 'preferred_color_scheme',
-    //     'data-lang': 'en',
-    //     'data-loading': 'lazy',
-    //     'crossorigin': 'anonymous',
-    //     'async': true
-    //     })
-    //   );
-    // }
   };
 
   window.onload = onLoad;

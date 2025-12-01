@@ -1,29 +1,15 @@
 ---
+import { env } from "node:process"
 import WidgetWrapper from "../ui/WidgetWrapper.astro"
+
+const giscusRepoId = import.meta.env.GISCUS_REPO_ID
+const giscusCategoryId = env.GISCUS_CATEGORY_ID
 ---
 
-<!-- The wizard that I borrowed this from to make comments work. https://www.maxpou.fr/blog/giscus-with-astro/ -->
+<!-- The wizard that I took inspiration from to make comments work. https://www.maxpou.fr/blog/giscus-with-astro/ -->
 <WidgetWrapper>
-  <section id="gsc" class="flex flex-col justify-center items-center mx-auto max-w-4xl -mt-20">
+  <section id="gsc" class="flex flex-col justify-center items-center mx-auto max-w-4xl -mt-20" data-repo-id={giscusRepoId} data-category-id={giscusCategoryId}>
     <h3 class="mb-4 text-2xl font-heading">Comments</h3>
-    <script
-      is:inline
-      src="https://giscus.app/client.js"
-      data-repo="alexandzors/blog-comments"
-      data-repo-id="{giscusRepoId}"
-      data-category="blog-comments"
-      data-category-id="{giscusCategoryId}"
-      data-mapping="title"
-      data-strict="0"
-      data-reactions-enabled="1"
-      data-emit-metadata="0"
-      data-input-position="top"
-      data-theme="preferred_color_scheme"
-      data-lang="en"
-      data-loading="lazy"
-      crossorigin="anonymous"
-      async
-    ></script>
   </section>
 </WidgetWrapper>
 
@@ -35,10 +21,43 @@ import WidgetWrapper from "../ui/WidgetWrapper.astro"
     iframe.contentWindow.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app')
   }
 
+  function loadGiscus() {
+    const container = document.getElementById('gsc')
+    if (!container) return
+
+    // Remove existing giscus elements if any
+    const existingScript = container.querySelector('script[src*="giscus.app"]')
+    const existingWidget = container.querySelector('.giscus')
+    const existingIframe = container.querySelector('iframe.giscus-frame')
+
+    if (existingScript) existingScript.remove()
+    if (existingWidget) existingWidget.remove()
+    if (existingIframe) existingIframe.remove()
+
+    // Create and append new giscus script
+    const script = document.createElement('script')
+    script.src = 'https://giscus.app/client.js'
+    script.setAttribute('data-repo', 'alexandzors/blog-comments')
+    script.setAttribute('data-repo-id', container.dataset.repoId || '')
+    script.setAttribute('data-category', 'blog-comments')
+    script.setAttribute('data-category-id', container.dataset.categoryId || '')
+    script.setAttribute('data-mapping', 'title')
+    script.setAttribute('data-strict', '0')
+    script.setAttribute('data-reactions-enabled', '1')
+    script.setAttribute('data-emit-metadata', '0')
+    script.setAttribute('data-input-position', 'top')
+    script.setAttribute('data-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')
+    script.setAttribute('data-lang', 'en')
+    script.setAttribute('data-loading', 'lazy')
+    script.crossOrigin = 'anonymous'
+    script.async = true
+
+    container.appendChild(script)
+  }
+
   const observer = new MutationObserver(updateGiscusTheme)
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 
-  window.onload = () => {
-    updateGiscusTheme()
-  }
+  // Load giscus on initial page load and after Astro page navigation
+  document.addEventListener('astro:page-load', loadGiscus)
 </script>
