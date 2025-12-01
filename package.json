@@ -24,6 +24,7 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/vercel": "^9.0.2",
     "@astrolib/analytics": "^0.6.1",
     "@astrolib/seo": "^1.0.0-beta.8",
     "@expressive-code/plugin-line-numbers": "^0.40.2",
