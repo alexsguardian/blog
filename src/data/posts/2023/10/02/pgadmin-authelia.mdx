@@ -234,10 +234,10 @@ If you have the pgAdmin environment variable `PGADMIN_CONFIG_OAUTH2_AUTO_CREATE_
 
 Click "Log in with Authelia". If everything is set up correctly you should be redirected to your Authelia sign in page. Once you sign in you should be redirected back to pgAdmin's dashboard. You will be prompted to create a master password. This password is used for locking/unlocking saved server passwords when the authentication source is either OAuth2, Kerberos, or Web server. You can disable this but it is not recommended. See [here](https://www.pgadmin.org/docs/pgadmin4/latest/master_password.html) for more details.
 
-![pgAdmin oAuth sign in flow](pgadmin_auth_login.webp)
+![pgAdmin oAuth sign in flow](/posts/2023/10/02/pgadmin_auth_login-animated.webp)
 <ImgDesc>Example of the pgAdmin sign in flow with Authelia 2FA and master password prompt</ImgDesc>
 
-## Conclusion 
+## Conclusion
 
 Hopefully this post keeps someone from hitting a wall with pgAdmin OAuth config like I did initially. I probably won't be uploading any files to the [blog-files](https://github.com/alexandzors/blog-files) repository since this isn't really a proper "guide" post that I normally make. Though, like always, if you run into issues feel free to reach out via the comments, or email!
 
@@ -247,4 +247,4 @@ Hopefully this post keeps someone from hitting a wall with pgAdmin OAuth config 
 
 - pgAdmin docs - [https://www.pgadmin.org/docs/pgadmin4/latest/index.html](https://www.pgadmin.org/docs/pgadmin4/latest/index.html)
 - Authelia OIDC docs - [https://www.authelia.com/configuration/identity-providers/open-id-connect/](https://www.authelia.com/configuration/identity-providers/open-id-connect/)
-- OpenID Connect docs - [https://openid.net/developers/how-connect-works/](https://openid.net/developers/how-connect-works/) 
+- OpenID Connect docs - [https://openid.net/developers/how-connect-works/](https://openid.net/developers/how-connect-works/)

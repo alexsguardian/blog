@@ -23,6 +23,8 @@ import a11yEmoji from '@fec/remark-a11y-emoji';
 import remarkDirective from 'remark-directive';
 import emoji from 'remark-emoji';
 
+import vercel from '@astrojs/vercel';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const hasExternalScripts = true;
@@ -31,7 +33,6 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 
 export default defineConfig({
   output: 'static',
-
   cacheDir: './cache',
 
   integrations: [
@@ -83,7 +84,7 @@ export default defineConfig({
     }),
 
     astrowind({
-      config: './src/config.yaml',
+      config: 'src/config.yaml',
     }),
 
     pagefind()
@@ -113,4 +114,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
+  adapter: vercel(),
 });

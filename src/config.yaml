@@ -4,7 +4,7 @@ site:
   base: '/'
   trailingSlash: false
 
-  googleSiteVerificationId: '{googleSiteVerificationId}'
+  googleSiteVerificationId: $GOOGLE_SITE_VERIFICATION_ID
 # Default SEO metadata
 metadata:
   title:
@@ -65,7 +65,7 @@ apps:
 analytics:
   vendors:
     googleAnalytics:
-      id: '{googleAnalyticsId}'
+      id: $GOOGLE_ANALYTICS_ID
 
 ui:
   theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
