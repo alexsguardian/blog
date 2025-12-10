@@ -82,7 +82,7 @@
       "permanent": true
     },
     {
-      "source": "/posts/2022/05/31/NewBlog+Future",
+      "source": "/posts/2022/05/31/NewBlog%2BFuture",
       "destination": "/posts/2022/05/31/newblogfuture",
       "permanent": true
     },
@@ -117,7 +117,7 @@
       "permanent": true
     },
     {
-      "source": "/posts/2022/08/09/Fail2Ban+Discord",
+      "source": "/posts/2022/08/09/Fail2Ban%2BDiscord",
       "destination": "/posts/2022/08/09/fail2bandiscord",
       "permanent": true
     },
