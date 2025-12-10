@@ -3,42 +3,42 @@
   "redirects": [
     {
       "source": "/2019/02/18/grafana-and-your-homelab",
-      "destination": "/posts/2022/07/22/grafana-gettingstarted/",
+      "destination": "/posts/2022/07/22/grafana-gettingstarted",
       "permanent": true
     },
     {
       "source": "/2019/02/18/influxdb-and-your-homelab",
-      "destination": "/posts/2022/09/17/grafana-influxdb/",
+      "destination": "/posts/2022/09/17/grafana-influxdb",
       "permanent": true
     },
     {
       "source": "/2019/02/19/grafana-homelab-monitoring",
-      "destination": "/posts/2022/07/22/grafana-gettingstarted/",
+      "destination": "/posts/2022/07/22/grafana-gettingstarted",
       "permanent": true
     },
     {
       "source": "/2019/02/19/prometheus-and-your-homelab",
-      "destination": "/posts/2022/07/22/grafana-gettingstarted/",
+      "destination": "/posts/2022/07/22/grafana-gettingstarted",
       "permanent": true
     },
     {
-      "source": "/2019/02/21/monitoring-your-media-server-with-varken/",
-      "destination": "/posts/2022/12/04/monitoringmediavarken/",
+      "source": "/2019/02/21/monitoring-your-media-server-with-varken",
+      "destination": "/posts/2022/12/04/monitoringmediavarken",
       "permanent": true
     },
     {
-      "source": "/2020/04/30/ubiquiti-udm-pro-usp-plug-review/",
+      "source": "/2020/04/30/ubiquiti-udm-pro-usp-plug-review",
       "destination": "/",
       "permanent": true
     },
     {
-      "source": "/2020/05/31/docker-container-building-via-github-actions/",
-      "destination": "/posts/2022/06/20/autoghactionsdiun/",
+      "source": "/2020/05/31/docker-container-building-via-github-actions",
+      "destination": "/posts/2022/06/20/autoghactionsdiun",
       "permanent": true
     },
     {
-      "source": "/2020/09/21/docker-container-building-via-github-actions-with-diun/",
-      "destination": "/posts/2022/06/20/autoghactionsdiun/",
+      "source": "/2020/09/21/docker-container-building-via-github-actions-with-diun",
+      "destination": "/posts/2022/06/20/autoghactionsdiun",
       "permanent": true
     },
     {
@@ -47,7 +47,7 @@
       "permanent": true
     },
     {
-      "source": "/archives/page/2/",
+      "source": "/archives/page/2",
       "destination": "/archives",
       "permanent": true
     },
@@ -63,82 +63,82 @@
     },
     {
       "source": "/grafana-guide/grafana-setup-deployment",
-      "destination": "/posts/2022/07/22/grafana-gettingstarted/",
+      "destination": "/posts/2022/07/22/grafana-gettingstarted",
       "permanent": true
     },
     {
       "source": "/grafana-guide/influxdb-setup-deployment",
-      "destination": "/posts/2022/09/17/grafana-influxdb/",
+      "destination": "/posts/2022/09/17/grafana-influxdb",
       "permanent": true
     },
     {
       "source": "/grafana-guide/prometheus-setup-deployment",
-      "destination": "/posts/2022/07/22/grafana-gettingstarted/",
+      "destination": "/posts/2022/07/22/grafana-gettingstarted",
       "permanent": true
     },
     {
       "source": "/grafana-guide/telegraf-setup-deployment",
-      "destination": "/posts/2022/09/17/grafana-influxdb/",
+      "destination": "/posts/2022/09/17/grafana-influxdb",
       "permanent": true
     },
     {
-      "source": "/posts/2022/05/31/NewBlog+Future/",
-      "destination": "/posts/2022/05/31/newblogfuture/",
+      "source": "/posts/2022/05/31/NewBlog+Future",
+      "destination": "/posts/2022/05/31/newblogfuture",
       "permanent": true
     },
     {
       "source": "/posts/2022/06/12/AutoGHActionsDocker",
-      "destination": "/posts/2022/06/12/autoghactionsdocker/",
+      "destination": "/posts/2022/06/12/autoghactionsdocker",
       "permanent": true
     },
     {
-      "source": "/posts/2022/06/25/AutoGHDeployLinode/",
-      "destination": "/posts/2022/06/25/autoghdeploylinode/",
+      "source": "/posts/2022/06/25/AutoGHDeployLinode",
+      "destination": "/posts/2022/06/25/autoghdeploylinode",
       "permanent": true
     },
     {
-      "source": "/posts/2022/06/30/AutoGHBinary/",
-      "destination": "/posts/2022/06/30/autoghbinary/",
+      "source": "/posts/2022/06/30/AutoGHBinary",
+      "destination": "/posts/2022/06/30/autoghbinary",
       "permanent": true
     },
     {
-      "source": "/posts/2022/07/02/LoggingSSHtoDiscord/",
-      "destination": "/posts/2022/07/02/loggingsshtodiscord/",
+      "source": "/posts/2022/07/02/LoggingSSHtoDiscord",
+      "destination": "/posts/2022/07/02/loggingsshtodiscord",
       "permanent": true
     },
     {
       "source": "/posts/2022/07/22/Grafana-GettingStarted",
-      "destination": "/posts/2022/07/22/grafana-gettingstarted/",
+      "destination": "/posts/2022/07/22/grafana-gettingstarted",
       "permanent": true
     },
     {
-      "source": "/posts/2022/08/09/Fail2Ban Discord/",
-      "destination": "/posts/2022/08/09/fail2bandiscord/",
+      "source": "/posts/2022/08/09/Fail2Ban%20Discord",
+      "destination": "/posts/2022/08/09/fail2bandiscord",
       "permanent": true
     },
     {
-      "source": "/posts/2022/08/09/Fail2Ban+Discord/",
-      "destination": "/posts/2022/08/09/fail2bandiscord/",
+      "source": "/posts/2022/08/09/Fail2Ban+Discord",
+      "destination": "/posts/2022/08/09/fail2bandiscord",
       "permanent": true
     },
     {
       "source": "/posts/2022/08/15/DeployJekyllLinode",
-      "destination": "/posts/2022/08/15/deployjekylllinode/",
+      "destination": "/posts/2022/08/15/deployjekylllinode",
       "permanent": true
     },
     {
       "source": "/posts/2022/09/17/Grafana-InfluxDB",
-      "destination": "/posts/2022/09/17/grafana-influxdb/",
+      "destination": "/posts/2022/09/17/grafana-influxdb",
       "permanent": true
     },
     {
       "source": "/posts/2022/12/04/MonitoringMediaVarken",
-      "destination": "/posts/2022/12/04/monitoringmediavarken/",
+      "destination": "/posts/2022/12/04/monitoringmediavarken",
       "permanent": true
     },
     {
-      "source": "/posts/2024/02/25/GHActions-LinodeCLI/",
-      "destination": "/posts/2024/02/25/ghactions-linodecli/",
+      "source": "/posts/2024/02/25/GHActions-LinodeCLI",
+      "destination": "/posts/2024/02/25/ghactions-linodecli",
       "permanent": true
     },
     {
