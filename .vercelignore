@@ -34,3 +34,6 @@ eslint.config.js
 
 # Lock files (Vercel uses package-lock.json)
 pnpm-lock.yaml
+
+# decapcms
+public/decapcms/
