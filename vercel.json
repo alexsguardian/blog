@@ -2,6 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
+      "source": "/posts/2022/08/09/Fail2Ban+Discord",
+      "destination": "/posts/2022/08/09/fail2bandiscord",
+      "permanent": true
+    },
+    {
       "source": "/2019/02/18/grafana-and-your-homelab",
       "destination": "/posts/2022/07/22/grafana-gettingstarted",
       "permanent": true
