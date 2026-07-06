@@ -1,0 +1,128 @@
+---
+publishDate: 2026-07-06T13:00:00-04:00
+title: "Meet Tracearr: The Ultimate Monitoring Platform for Media Servers - Part 1"
+excerpt: "An overview of Tracearr, a modern open-source monitoring platform for Plex, Jellyfin, and Emby servers."
+category: Monitoring
+tags:
+  - tracearr
+  - media server
+  - monitoring
+  - homelab
+author: Alexander
+image: ~/assets/images/banners/tracearr_banner.webp
+comments: true
+---
+import ImgDesc from '~/components/custom/ImgDesc.astro'
+import Aside from '~/components/widgets/Aside.astro'
+import { Image } from 'astro:assets'
+import ImageGallery from 'src/components/custom/ImageGallery.astro'
+
+import TracearrDashboard from './tracearr_dashboard.webp'
+import TracearrMap from './tracearr_map.webp'
+import TracearrHistory from './tracearr_history.webp'
+import TracearrActivity from './tracearr_activity.webp'
+import TracearrQuality from './tracearr_quality.webp'
+import TracearrStorage from './tracearr_storage.webp'
+import TracearrWatch from './tracearr_watch.webp'
+import TracearrDevices from './tracearr_devices.webp'
+import TracearrBandwidth from './tracearr_bandwidth.webp'
+import TracearrRules from './tracearr_rules.webp'
+import TracearrRulesEngine from './tracearr_rules_engine.webp'
+
+If you're like me, you probably run a media server—or three. Maybe you started with [Plex](https://plex.tv), dabbled in [Jellyfin](https://jellyfin.org), and eventually added [Emby](https://emby.media) to the mix. While having options is great, monitoring them has always been a bit of a fragmented experience. [Tautulli](https://tautulli.com) is excellent for Plex (and by extension [JBOPS](https://github.com/blacktwin/JBOPS)), and [Jellystat](https://github.com/CyferShepard/Jellystat) works wonders for Jellyfin and Emby, but there hasn't been a truly unified solution that handles everything in one place... Until now.
+
+Enter **[Tracearr](https://tracearr.com)**.
+
+Tracearr is a modern, open-source monitoring platform designed specifically for media server enthusiasts. It provides a single dashboard to track your streams, analyze playback and media, and instantly detect suspicious account sharing across all your servers.
+
+## Why Tracearr?
+
+The biggest pain point for multiserver admins is "dashboard fatigue." Switching between browser tabs just to see who is watching what on which server is inefficient. Tracearr solves this by being server-agnostic. Whether you’re running one Plex instance or a dozen mixed servers, Tracearr brings all that data into a cohesive, real-time interface.
+
+<Image src={TracearrDashboard} alt='Tracearr Dashboard' width={800} height={450} class="mx-auto my-4" />
+<ImgDesc>The Tracearr dashboard provides a unified view of all your connected media servers.</ImgDesc>
+
+## Key Features
+
+Tracearr isn't just a simple log viewer; it’s a fully featured analytics and security suite for your home lab.
+
+#### 1. Real-Time Session Tracking
+Using Plex's Server-Sent Events (SSE) and [Jellyfin/Emby SSE plugin](https://docs.tracearr.com/configuration/realtime), Tracearr gives you a live look at every active stream. You can see who is watching, what device they are using, their IP address, their physical location* on an interactive world map, and all the metadata about the session.
+
+<Aside title="Location Data Note" type="note">
+ Tracearr uses IP addresses to determine the physical location of your users. While this is generally accurate, it may not always reflect their true location due to VPNs, proxies, or other network configurations.
+</Aside>
+
+<Aside title="Feature Note" type="tip">
+  Tracearr had an update while writing this post that added a unified view for all connected servers. You can now see all active streams across Plex, Jellyfin, and Emby on the dashboard. I do not run Emby or Jellyfin so I am unable to show it in action, but the feature is live and available for those who do!
+</Aside>
+
+#### 2. Deep Analytics
+Ever wondered if your users are actually utilizing those 4K files or if they’re just transcoding down to 720p? Tracearr provides detailed breakdowns of:
+- **Stream Quality:** Transcode vs. Direct Play stats and codec distribution.
+- **Library Growth:** Track how your collection is expanding over time and what media is being consumed the most.
+- **Bandwidth Usage:** See who is eating up your upload speed.
+- **Device Compatibility:** Identify which devices are causing the most transcodes.
+
+#### 3. Intelligent Sharing Detection
+One of the unique features of Tracearr is its ability to spot account sharing. It uses several "Rules" to flag suspicious activity, such as:
+- **Impossible Travel:** Flagging a user who appears in New York and London within 30 minutes.
+- **Simultaneous Locations:** Detecting one account streaming from two different cities at the same time.
+- **Trust Scores:** Users earn (or lose) trust based on their streaming habits. Limit those pesky family members who keep sharing their accounts with friends if their rep drops too low (looking at you, sis!).
+
+#### 4. Seamless Data Importing
+If you’re already using Tautulli or Jellystat, you don't have to start from scratch. Tracearr allows you to import your existing watch history so you can keep all those years of data.
+
+#### 5. Rules Engine
+Tracearr's rules engine allows you to create custom rules to monitor and manage your media server. You can set conditions based on user behavior, stream quality, and more, and take actions such as sending notifications or adjusting user permissions. Check out the [official documentation](https://docs.tracearr.com/configuration/rules) for a full list of available rules and actions.
+
+<Image src={TracearrMap} alt='Tracearr Stream Map' width={800} height={450} class="mx-auto my-4" />
+<ImgDesc>The interactive map lets you visualize where your users have been watching from.</ImgDesc>
+
+## Under the Hood
+
+For the tech-savvy, Tracearr is built on a modern stack:
+- **Frontend:** React 19 & Tailwind CSS
+- **Backend:** Node.js & Fastify
+- **Database:** TimescaleDB (for high-performance time-series data)
+- **Cache:** Redis
+
+It’s designed to be fast, responsive, and—most importantly—self-hosted. Your data never leaves your infrastructure if you don't want it to.
+
+<ImageGallery
+  title="Tracearr Screenshots"
+  subtitle='click/tap to enlarge'
+  galleryId="screenshots"
+  items={[
+    {src: TracearrHistory, type: 'image', alt: 'Tracearr Watch History Tab'},
+    {src: TracearrActivity, type: 'image', alt: 'Tracearr Activity Tab'},
+    {src: TracearrQuality, type: 'image', alt: 'Tracearr Library Quality Tab'},
+    {src: TracearrStorage, type: 'image', alt: 'Tracearr Library Storage Tab'},
+    {src: TracearrWatch, type: 'image', alt: 'Tracearr Library Watch Analytics Tab'},
+    {src: TracearrDevices, type: 'image', alt: 'Tracearr Performance Devices Tab'},
+    {src: TracearrBandwidth, type: 'image', alt: 'Tracearr Bandwidth Usage Tab'},
+    {src: TracearrRules, type: 'image', alt: 'Tracearr Rules Tab'},
+    {src: TracearrRulesEngine, type: 'image', alt: 'Tracearr Rules Engine Configuration'}
+  ]}
+/>
+
+## Getting Started
+
+Tracearr is completely free and open-source under the AGPL-3.0 license. If you're ready to take your monitoring to the next level, you can deploy it in minutes using Docker.
+
+I won't cover the full installation here, as the official documentation does a much better job of keeping up with updates, but you can find everything you need to get started via the links below.
+
+- **Official Website:** [tracearr.com](https://tracearr.com)
+- **Documentation:** [docs.tracearr.com](https://docs.tracearr.com)
+- **GitHub Repository:** [connorgallopo/tracearr](https://github.com/connorgallopo/tracearr)
+- **Discord Community:** [Join the Tracearr Discord](https://discord.gg/a7n3sFd2Yw)
+
+## Conclusion
+
+Tracearr is a breath of fresh air for the self-hosted media community. It’s polished, powerful, and fills a significant gap in the ecosystem. If you’re tired of juggling multiple dashboards, I highly recommend giving it a spin. Also don't forget to sponsor your favorite open-source projects if you can!
+
+Make sure to check out [Part 2](/posts/2026/07/06/meet-tracearr-part-2-the-interview) where I sit down with Connor Gallopo, the creator of Tracearr, to discuss the inspiration, challenges, and the future of this exciting project.
+
+---
+
+*What do you think of Tracearr? Are you sticking with Tautulli / Jellystat, or are you ready for a unified dashboard? Let me know in the comments below!*
