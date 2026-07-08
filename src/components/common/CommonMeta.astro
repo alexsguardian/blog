@@ -1,4 +1,5 @@
 ---
+import { SITE } from 'astrowind:config';
 import { getAsset } from '~/utils/permalinks';
 ---
 
@@ -6,3 +7,4 @@ import { getAsset } from '~/utils/permalinks';
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <link rel="sitemap" href={getAsset('/sitemap-index.xml')} />
+<link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS Feed`} href={getAsset('/rss.xml')} />

@@ -8,6 +8,7 @@ import SinglePost from '~/components/blog/SinglePost.astro';
 import ToBlogLink from '~/components/blog/ToBlogLink.astro';
 import Comments from '~/components/custom/Comments.astro';
 import BackToTop from '~/components/common/BackToTop.astro';
+import StructuredData from '~/components/common/StructuredData.astro';
 
 import { getCanonical, getPermalink } from '~/utils/permalinks';
 import { getStaticPathsBlogPost, blogPostRobots } from '~/utils/blog';
@@ -39,7 +40,16 @@ const metadata = merge(
     openGraph: {
       type: 'article',
       ...(image
-        ? { images: [{ url: image, width: (image as ImageMetadata)?.width, height: (image as ImageMetadata)?.height , format: 'webp' }] }
+        ? {
+            images: [
+              {
+                url: image,
+                width: (image as ImageMetadata)?.width,
+                height: (image as ImageMetadata)?.height,
+                format: 'webp',
+              },
+            ],
+          }
         : {}),
     },
   },
@@ -48,12 +58,28 @@ const metadata = merge(
 ---
 
 <Layout metadata={metadata}>
+  <StructuredData
+    title={post.title}
+    description={post.excerpt}
+    publishDate={post.publishDate}
+    updateDate={post.updateDate}
+    author={post.author}
+    image={image}
+    url={url}
+    category={post.category}
+  />
   <SinglePost post={{ ...post, image: image }} url={url}>
     {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
   </SinglePost>
   <ToBlogLink />
-  {post.comments ? <Comments/> : <p class="flex justify-center my-8 md:my-10 text-muted">Comments are disabled for this post.</p> }
-  <hr class="w-96 h-1 mx-auto my-4 bg-[--aw-color-primary] border-0 rounded-sm md:my-10 dark:bg-[--aw-color-primary]"/>
+  {
+    post.comments ? (
+      <Comments />
+    ) : (
+      <p class="flex justify-center my-8 md:my-10 text-muted">Comments are disabled for this post.</p>
+    )
+  }
+  <hr class="w-96 h-1 mx-auto my-4 bg-[--aw-color-primary] border-0 rounded-sm md:my-10 dark:bg-[--aw-color-primary]" />
   <RelatedPosts post={post} />
   <BackToTop />
 </Layout>

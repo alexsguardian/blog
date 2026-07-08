@@ -54,8 +54,8 @@ const postCollection = defineCollection({
     draft: z.boolean().optional(),
     pinned: z.boolean().optional(),
 
-    title: z.string(),
-    excerpt: z.string().optional(),
+    title: z.string().max(80, 'Title should stay under ~80 characters to avoid SERP truncation'),
+    excerpt: z.string().max(160, 'Meta descriptions should stay under 160 characters').optional(),
     image: z.string().optional(),
 
     category: z.string().optional(),

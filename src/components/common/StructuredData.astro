@@ -1,0 +1,67 @@
+---
+import type { ImageMetadata } from 'astro';
+import { SITE } from 'astrowind:config';
+import { getCanonical, getHomePermalink, getPermalink } from '~/utils/permalinks';
+
+export interface Props {
+  title: string;
+  description?: string;
+  publishDate: Date;
+  updateDate?: Date;
+  author?: string;
+  image?: ImageMetadata | string;
+  url: string | URL;
+  category?: { title: string; slug: string };
+}
+
+const { title, description, publishDate, updateDate, author, image, url, category } = Astro.props;
+
+const imageUrl = typeof image === 'string' ? image : image?.src ? String(new URL(image.src, Astro.site)) : undefined;
+
+const blogPosting = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  image: imageUrl,
+  datePublished: publishDate?.toISOString(),
+  dateModified: (updateDate ?? publishDate)?.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: author || SITE.name,
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': String(url),
+  },
+};
+
+const breadcrumbItems = [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: getCanonical(getHomePermalink()) },
+  ...(category
+    ? [
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: category.title,
+          item: getCanonical(getPermalink(category.slug, 'category')),
+        },
+      ]
+    : []),
+  {
+    '@type': 'ListItem',
+    position: category ? 3 : 2,
+    name: title,
+    item: String(url),
+  },
+];
+
+const breadcrumbList = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbItems,
+};
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(blogPosting)} />
+<script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbList)} />
