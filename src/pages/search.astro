@@ -3,7 +3,17 @@ import Layout from '~/layouts/PageLayout.astro';
 import SearchField from '~/components/custom/SearchField.astro';
 import ContentWrapper from '~/components/custom/ContentWrapper.astro';
 import Hero from '~/components/widgets/HeroText.astro';
+import Button from '~/components/ui/Button.astro';
 import { Icon } from 'astro-icon/components';
+import { findCategoriesWithOccurrences } from '~/utils/blog';
+import { cleanSlug, getPermalink } from '~/utils/permalinks';
+
+const categoriesWithOccurrences = await findCategoriesWithOccurrences();
+const categories = Object.entries(categoriesWithOccurrences).map(([title, count]) => ({
+  slug: cleanSlug(title),
+  title,
+  count,
+}));
 
 const metadata = {
   title: 'Search | Alex\'s Blog',
@@ -11,23 +21,34 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <Hero 
-  title="Search" 
+  <Hero
+  title="Search"
   subtitle="Search for posts on the blog."
   />
   <ContentWrapper>
     <div class="pb-2">
-      <a 
-        href="/" 
-        class="group hover:text-primary hover:dark:text-secondary"
-    >
-      <Icon 
-      name="tabler:chevron-left"
-      class="group-hover:dark:text-secondary group-hover:text-primary w-4 h-4 inline-block -mt-0.5 dark:text-gray-400"
-      />
-      Back
-    </a>
+      <Button variant="tertiary" class="px-3 md:px-3" href="/">
+        <Icon name="tabler:chevron-left" class="w-5 h-5 mr-1 -ml-1.5 rtl:-mr-1.5 rtl:ml-1" /> Back
+      </Button>
     </div>
     <SearchField />
+    {
+      categories.length > 0 && (
+        <div class="mt-8">
+          <h2 class="text-xl font-bold font-heading mb-4 text-center">Or Browse by Category</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {categories.map(({ slug, title, count }) => (
+              <a
+                href={getPermalink(slug, 'category')}
+                class="block p-4 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary transition-colors duration-200"
+              >
+                <span class="font-bold font-heading">{title}</span>
+                <span class="block text-sm text-muted dark:text-slate-400">{count} {count === 1 ? 'post' : 'posts'}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    }
   </ContentWrapper>
 </Layout>
