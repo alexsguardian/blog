@@ -25,14 +25,14 @@ You will need a sudo enabled user to update pam.d config as well as creating the
 If you are looking for a self hosted alternative take a look at my ntfy.sh post, [here](/posts/2023/09/12/selfhosting-ntfy/)!
 </Aside>
 
-# Creating the Webhook
+## Creating the Webhook
 
 Now I am going to assume that you already have a Discord account, if not you can sign up [here](https://discord.com/register), and you have a server setup with a text channel already created. To create the webhook, hover over the text channel you want to use and click on the settings gear. In the channel settings click on "Integrations" and then on "Webhooks". Click "New Webhook" and change the name to something you will recognize. Then click "Copy Webhook URL" and paste it into notepad so we have it for later. You can then save and exit the channel settings view.
 
 ![How to create a Discord webhook GIF](/posts/2022/07/02/discord-webhook-creation-animated.webp)
 <ImgDesc>Creating a Discord webhook through the channel settings</ImgDesc>
 
-# Configuring SSH to Use the Webhook
+## Configuring SSH to Use the Webhook
 
 Now that we have our webhook created we can setup our SSH daemon to send a webhook every time we log in and out of our Linux host. To do this SSH to your host and run the following command to create our script file:
 
@@ -84,7 +84,7 @@ sudo chmod +x /sbin/sshd-login
 sudo chown root:root /sbin/sshd-login
 ```
 
-# Updating pam.d Config
+## Updating pam.d Config
 
 In order for our script to send webhook notifications on login and log out we need to update `pam.d` to invoke it. To do this we need to edit the `sshd` config file located in `/etc/pam.d`.
 
@@ -104,14 +104,14 @@ Save the file by hitting `CTRL+X` then `y`. Once the file is closed we need to r
 sudo systemctl restart sshd
 ```
 
-# Testing the Webhook
+## Testing the Webhook
 
 With the script added and setup exit your SSH session and log back in again. If it's working you should get an @ notification from Discord like the example below.
 
 ![SSH webhook log example](/posts/2022/07/02/discord-ssh-logging-animated.webp)
 <ImgDesc>Example of SSH login notifications in Discord</ImgDesc>
 
-## Troubleshooting
+### Troubleshooting
 
 If it does not send a webhook to Discord you can try one of the following troubleshooting steps.
 

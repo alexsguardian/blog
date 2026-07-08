@@ -49,7 +49,7 @@ In my case I have Sonarr, Radarr, and Tautulli running with [Plex](https://www.p
 I will be using [Docker](https://docker.com) for this post as it makes it easier to build and run services without bloating the host OS with dependencies. If you are not using Docker you can just follow the git commands and then run the `Varken.py` script after setting up the `varken.ini` configuration file.
 </Aside>
 
-# Creating the Directory Structure and Building Varken
+## Creating the Directory Structure and Building Varken
 
 This install will require some familiarity with git commands. If you are unfamiliar I will do my best to make this as easiest to follow as possible. Mainly we will be pulling the [Varken repository](https://github.com/Boerderij/Varken) locally and then building a custom docker image based off [PR#242](https://github.com/Boerderij/Varken/pull/242) (from [ǝuoqɹǝuuᴉp](https://github.com/Dinnerbone) of all people :) ) which adds InfluxDB v2 support. To get started, ssh to your docker host and create a new directory structure for Varken.
 
@@ -99,7 +99,7 @@ docker image ls | grep yourname/varken:influxdb2-dev
 ![Container Image](grafana-varken_image.webp)
 <ImgDesc>Docker image list showing the built container</ImgDesc>
 
-## Setting up the Docker Compose file
+### Setting up the Docker Compose file
 
 Now that we have our container image ready we can quickly create our `docker-compose.yml` file for Varken. Make sure you are in the main `/opt/docker/varken/` directory.
 
@@ -140,7 +140,7 @@ If you did not follow my [Grafana guide](/posts/2022/07/22/Grafana-GettingStarte
 
 You can then save and close the file by hitting `CTRL + X` then `y`.
 
-## Configuring Varken
+### Configuring Varken
 
 Varken uses an [initialization file](https://en.wikipedia.org/wiki/INI_file) (`.ini`) to house its configuration, which we need to persistently mount to our Varken container. Change directory to the main Varken dir and then clone the example file from GitHub.
 
@@ -157,7 +157,7 @@ cp varken.example.ini varken.ini
 
 Before we can edit the configuration file we need to obtain a [Maxmind DB]() key. This is pretty straight forward and will require you to make an account.
 
-### Obtaining a Maxmind DB API key
+#### Obtaining a Maxmind DB API key
 
 First we need to sign up for a Maxmind account, which you can do [here](https://www.maxmind.com/en/geolite2/signup) (It's free!). Follow the sign-up process and make sure to verify the account. Once completed, login to your new account. After login, you will be greeted with the following page.
 
@@ -179,7 +179,7 @@ At this point you will be shown your Maxmind key. Copy this key somewhere safe a
 ![Maxmind New Key](grafana-varken_maxmind-new_key.webp)
 <ImgDesc>New Maxmind license key</ImgDesc>
 
-### varken.ini
+#### varken.ini
 
 With our Maxmind key in hand, we can now edit the `varken.ini` file. Switch back over to your terminal session and edit the `varken.ini` file.
 
@@ -266,7 +266,7 @@ Save and close the file by hitting `CTRL + x` then `y`.
 Example varken.ini file with all sections configured can be found in the blog-files repository.
 </Aside>
 
-### Deploying Varken
+#### Deploying Varken
 
 Now that we have the configuration file configured it's time to deploy Varken. To do this run the following command in the `/opt/docker/varken` directory.
 
@@ -298,7 +298,7 @@ docker logs -f varken-varken-1
 
 With Varken now running and sending data to Influx we can go ahead and set up the dashboard in Grafana. 
 
-# Setting up the Grafana Dashboard
+## Setting up the Grafana Dashboard
 
 Login to Grafana and go to Dashboards > Import. Then import the flux dashboard JSON which can be obtained from my blog-files repository [here](https://raw.githubusercontent.com/alexandzors/blog-files/main/posts/MonitoringMediaVarken/grafana-dashboard.json). You can either copy the entire file and paste it into the panel import box or download the JSON file and upload it to Grafana. After finishing the import you should be greeted by the dashboard.
 
@@ -314,6 +314,6 @@ A few panels should start updating with data from InfluxDB if you already have a
 ![Populated Varken Dashboard](grafana-varken_dashboard_pop.webp)
 <ImgDesc>Working Dashboard Example</ImgDesc>
 
-# Conclusion
+## Conclusion
 
 This dashboard can be easily expanded with more panels and data from other supported Varken services as well as stats from something like [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/). Note that this dashboard is a WIP and I'll be adding more panels for Varken's other services over time. If you like Varken consider support the developers: [ko-fi](https://ko-fi.com/varken). As always if you run into any issues let me know via the issues' section of the [blog-files](https://github.com/alexandzors/blog-files/issues) repository or drop a comment down below! 

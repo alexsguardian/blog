@@ -23,7 +23,7 @@ Having a secure authentication set up is recommended along side fail2ban to redu
 
 In my previous post, [SSH Login Logging to Discord via Webhooks](/posts/2022/07/02/LoggingSSHtoDiscord/), we set up `pam.d` to log SSH logins to Discord over a webhook. We can also do this with Fail2Ban using a custom action. If you already have Fail2Ban installed you can __[skip ahead](#configuring-fail2ban)__ to the configuration.
 
-# Installing Fail2Ban
+## Installing Fail2Ban
 
 <Aside type="note">
 I use Ubuntu Server as my main linux distribution, so all my commands are geared toward it.
@@ -44,7 +44,7 @@ systemctl status fail2ban.service
 ![Fail2Ban Service Status](discord-fail2ban-status.webp)
 <ImgDesc>Output of the `systemctl status` command showing the status of the Fail2Ban service</ImgDesc>
 
-# Configuring Fail2Ban
+## Configuring Fail2Ban
 
 Now that Fail2Ban is installed we can configure it to log to Discord. First let's create our `/etc/fail2ban/jail.local` to tell Fail2Ban what to do.
 
@@ -102,7 +102,7 @@ backend = %(sshd_backend)s
 
 Hit `CTRL`+`x` and then `y` to save and close the `jail.local` file.
 
-## Creating the Discord Action
+### Creating the Discord Action
 
 Now that we have our `/etc/fail2ban/jail.local` file we can create the `/etc/fail2ban/action.d/discord_notifications.conf` action. First we need to get a webhook URL from Discord. To do this open Discord and navigate to the channel settings of the channel you want to log to. Open the integration settings and create a webhook. Give it a name you'll recognize and copy the url.
 
@@ -167,7 +167,7 @@ hostname = lab_host_1
 
 Hit `CTRL`+`x` then `y` to save and close the file.
 
-# Starting and Testing Fail2Ban
+## Starting and Testing Fail2Ban
 
 With everything configured we can now start up the fail2ban service and then check it's status.
 
@@ -243,7 +243,7 @@ You should see a ban message show up in your Discord channel and then 30s later 
 
 Once you confirm it is working you can re-edit your `/etc/fail2ban/jail.local` config file and update the `bantime =` option back to the value you want (default is `10m` though, I usually set it for `24h`). Also make sure to update `ignoreip =` to include your subnet / IP again.
 
-# Extras and Conclusion
+## Extras and Conclusion
 
 If you want to get an @ notification when a host is banned you can update the `/etc/fail2ban/action.d/discord_notifications.conf` action to include an @ in the payload. To do this edit the file and replace:
 

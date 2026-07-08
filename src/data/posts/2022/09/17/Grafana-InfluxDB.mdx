@@ -18,11 +18,11 @@ import Aside from '~/components/widgets/Aside.astro'
 
 In my [previous post](/posts/2022/07/22/Grafana-GettingStarted) of this series we deployed [Grafana](https://grafana.com), [Prometheus](https://prometheus.io), and [Node Exporter](https://github.com/prometheus/node_exporter). We also set up the dashboard in Grafana to read the data from Prometheus. In this post we will be covering the deployment of [InfluxDB](https://www.influxdata.com/products/influxdb-overview/) and [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/). 
 
-# The Environment
+## The Environment
 
 This guide series assumes you are on Windows 10 or 11 with [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-us&gl=US), [Visual Studio Code](https://code.visualstudio.com), the [OpenSSH Client](https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui) installed and to keep this guide easy to update in the future, that you already have a Ubuntu Server or similar Linux imaged system already running and ready. If you do not know how to install Ubuntu Server, check out [this guide from Ubuntu](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview).
 
-## Pre-Requisites
+### Pre-Requisites
 
 - Have an x86 computing device (PC, Server, Workstation, Micro PC, etc) with Ubuntu Server installed.
   - You can use a Raspberry Pi or other ARM based device. Just make sure to change docker / compose commands to use built for ARM images instead.
@@ -33,7 +33,7 @@ This guide series assumes you are on Windows 10 or 11 with [Windows Terminal](ht
 - Your favorite drink and snacks within reach. ( A must for hobbies )
 - Followed my previous post __[here](/posts/2022/07/22/Grafana-GettingStarted)__.
 
-# Deploying InfluxDB
+## Deploying InfluxDB
 
 Unlike Prometheus, which scrapes exporters, InfluxDB is only a database. It does not do any of its own data gathering rather you must send data to it using outside agents / collectors. This post will be covering how to set up and deploy InfluxDB OSS v2.3 and Telegraf v1.24 in Docker. To get started, we need to set up the directory for our InfluxDB container to house the database and config files. After SSH'ing to our host run the following to create the new directories.
 
@@ -112,7 +112,7 @@ Click next then click on the "Configure Later" button on the completed wizard pa
 ![InfluxDB Wizard Complete](grafana-influx_setup_complete.webp)
 <ImgDesc>Completed InfluxDB Wizard Page</ImgDesc>
 
-## Configuring InfluxDB for Telegraf
+### Configuring InfluxDB for Telegraf
 
 We need 3 pieces of information before we can setup Telegraf. Since we already have our organization name from earlier we can skip right to creating the data bucket for Telegraf. To do this click on the "Load Data" tab on the left hand side of the InfluxDB web ui. Then click on "Buckets" and follow the steps below.
 
@@ -139,7 +139,7 @@ Next we need to create the Telegraf data agent. Under the left side "Load Data" 
 
 You will be shown your API token for Telegraf. Copy this token (everything after `INFLUX_TOKEN=`) somewhere safe for now.
 
-# Deploying Telegraf
+## Deploying Telegraf
 
 Now that we have InfluxDB running, we can deploy Telegraf to monitor our Docker containers. In my [previous post](/posts/2022/07/22/Grafana-GettingStarted) we set up [node_exporter](https://github.com/prometheus/node_exporter) for host monitoring so as an example we will only be using Telegraf for Docker. It can also do host monitoring if you wanted to replace node exporter.
 
@@ -218,7 +218,7 @@ Once everything has been updated we can use `CTRL` + `x` then `y` to save and cl
 docker compose up -d
 ```
 
-## Verifying Telegraf's Data Collection
+### Verifying Telegraf's Data Collection
 
 We can verify that Telegraf is sending data to InfluxDB by returning to the web ui. Click on "Data Explorer" on the left side menu. Click on "Script Editor" and paste the following script into the code editor pane. Make sure to replace "grafanaguide" with the name of your host.
 
@@ -238,7 +238,7 @@ Then click "Submit". The graph above the script editor should update with a sing
 ![InfluxDB Data Explorer](grafana-influxdb_dataxp.webp)
 <ImgDesc>The data retrieved from the query in Influx's Data Explorer tab</ImgDesc>
 
-# Configuring Grafana
+## Configuring Grafana
 
 Before we can add InfluxDB as a data source to Grafana we need to first create a login for Grafana and then add Grafana to the `influxdb-net` vNet. To create a login for Grafana we need to return to the InfluxDB web ui and under the "Load Data" left side menu select "API Tokens". Follow the steps below to create the token.
 
@@ -334,7 +334,7 @@ Make sure to change `bucket: "telegraf"`, and `["host"] == "grafanaguide"` to ma
 ![Grafana InfluxDB Telegraf Panel CPU %](grafana-influx_cont_cpu.webp)
 <ImgDesc>Example of a Grafana panel showing container CPU usage from Telegraf data</ImgDesc>
 
-# Conclusion
+## Conclusion
 
 InfluxDB 2.0 changed how the database works and broke a lot of older collectors developed by the community. However, the new version is much nicer to set up then previous versions. Also to note, most dashboards you can find on [Grafana's site](https://grafana.com/grafana/dashboards/) do not work with the InfluxDB Flux query language as they were built with the older InfluxQL query language. To get you started on your own dashboard for Telegraf's Docker input, I've included a few other panels in my [blog-files](https://github.com/alexandzors/blog-files) repository for the blog. You can find them in [this post's directory](https://github.com/alexandzors/blog-files/tree/main/guides/grafana-guide/Grafana-InfluxDB) under the Guides/Grafana directory. I will add more over time. As always if you run into any issues please reach out via a comment or email!
 
