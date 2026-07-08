@@ -10,7 +10,7 @@ metadata:
   title:
     default: "Alex's Blog"
     template: "%s"
-  description: "Sometimes I blog about my homelab or other various things."
+  description: "Sometimes I blog about my homelab or other random tech things I find interesting"
   robots:
     index: true
     follow: true

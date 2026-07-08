@@ -39,6 +39,18 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
     <Headline>Alex's Blog</Headline>
+    {
+      currentPage === 1 && (
+        <p class="max-w-2xl mx-auto text-center text-muted dark:text-slate-400 text-lg mb-1 md:mb-4">
+          Welcome to my blog! I'm Alex, and this is where I ramble about my homelab and the tech I tinker with when I'm not
+          doing DevOps for a living. Expect deep dives on self-hosting, Docker, Caddy, monitoring stacks, CI/CD
+          pipelines, and whatever new project breaks my lab this week. If you're into homelabbing, self-hosted
+          software, or just want to see how someone else's set up is held together with YAML and
+          probably duct tape, you're in the right place.
+        </p>
+        <sub class="block text-center text-muted dark:text-slate-400 text-sm mb-4 md:mb-16">P.S. I don't run ads so check out the <a href="/about" class="text-primary underline">About</a> page if you want to support the blog. Thanks for stopping by!</sub>
+      )
+    }
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
   </section>

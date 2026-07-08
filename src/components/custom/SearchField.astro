@@ -32,40 +32,54 @@ const divProps = { ...(id ? { id }: {}), ...(className ? { class: className } : 
     padding: 0.75rem 1rem;
     border-radius: var(--pagefind-ui-border-radius);
     font-family: var(--pagefind-ui-font);
-    border: 2px solid var(--aw-color-primary) !important;
+    border: 2px solid var(--aw-color-border) !important;
     font-weight: 200 !important;
+    color: var(--pagefind-ui-text) !important;
+    caret-color: var(--pagefind-ui-text);
     &:focus, &:focus-visible {
       outline-offset: -2px;
       outline: 3px solid var(--aw-color-secondary) !important;
       border-color: transparent !important;
     }
   }
-  
-  .pagefind-ui__result {
-    margin: 1.25rem;
-    border-bottom: 1px solid var(--aw-color-primary) !important;
-    font-weight: 200 !important;
+
+  .pagefind-ui__result mark {
+    background-color: var(--aw-color-yellow);
+    color: #000;
+    border-radius: 2px;
   }
-  
+
+  .pagefind-ui__result {
+    margin: 1.25rem 0 !important;
+    padding: 1rem !important;
+    border: 1px solid var(--aw-color-border) !important;
+    border-radius: var(--pagefind-ui-border-radius);
+    font-weight: 200 !important;
+    transition: border-color 0.2s ease;
+    &:hover {
+      border-color: var(--aw-color-primary) !important;
+    }
+  }
+
   .pagefind-ui__result-title {
     font-size: 1.25rem;
     font-weight: 500 !important;
     text-decoration: underline !important;
   }
-  
+
   .pagefind-ui__message {
     margin: .5rem 1.25rem;
     font-family: var(--pagefind-ui-font);
     font-weight: 200 !important;
   }
   .pagefind-ui__filter-panel {
-    display: none !important; 
+    display: none !important;
   }
 
   .pagefind-ui__button {
     background-color: var(--pagefind-ui-primary) !important;
     color: white !important;
-    border: 1px solid var(--pagefind-ui-border) !important;
+    border: 1px solid var(--aw-color-border) !important;
     border-radius: var(--pagefind-ui-border-radius) !important;
     padding: 0.5rem 1rem !important;
     font-family: var(--pagefind-ui-font) !important;

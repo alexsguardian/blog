@@ -4,6 +4,38 @@ import HeroText from '~/components/widgets/HeroText.astro';
 import ContentWrapper from '~/components/custom/ContentWrapper.astro';
 import Support from '~/components/widgets/Support.astro';
 import { Icon } from 'astro-icon/components';
+import { footerData } from '~/navigation';
+
+const socialLinks = footerData.socialLinks.filter((link) => link.ariaLabel !== 'RSS');
+
+const repoLinks = [
+  {
+    name: 'blog',
+    description: 'Source code for this blog itself — built with Astro.',
+    href: 'https://github.com/alexsguardian/blog',
+  },
+  {
+    name: 'blog-files',
+    description: 'Downloadable configs, scripts, and files referenced throughout blog posts.',
+    href: 'https://github.com/alexandzors/blog-files',
+  },
+  {
+    name: 'blog-comments',
+    description: "Comments backend for this blog.",
+    href: 'https://github.com/alexandzors/blog-comments',
+  },
+];
+
+const techStack = [
+  { name: 'Astro', description: 'Static site framework powering the whole blog.', icon: 'tabler:brand-astro' },
+  { name: 'TypeScript', description: 'Type-safe JS across components and utilities.', icon: 'tabler:brand-typescript' },
+  { name: 'Tailwind CSS', description: 'Utility-first styling.', icon: 'tabler:brand-tailwind' },
+  { name: 'Vercel', description: 'Hosting and deployment.', icon: 'tabler:brand-vercel' },
+  { name: 'MDX', description: 'Markdown + JSX for post content.', icon: 'tabler:markdown' },
+  { name: 'Pagefind', description: 'Static full-text search, no backend needed.', icon: 'tabler:search' },
+  { name: 'Giscus', description: 'GitHub Discussions-powered comments.', icon: 'tabler:message-circle' },
+  { name: 'Sharp', description: 'Image optimization and resizing pipeline.', icon: 'tabler:photo' },
+];
 
 const supportItems = [
   {
@@ -107,21 +139,98 @@ const metadata = {
 <Layout metadata={metadata}>
   <HeroText
     title="About"
-    subtitle="Hi! My names Alex and I like tech."
+    subtitle="About me and my blog. Who I am, what I do, and why I do it."
   />
 
   <ContentWrapper>
+    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-4">
+      I'm Alex — Senior DevOps Engineer by trade, homelabber by night. About 14 years in IT total, the last 6 deep in DevOps, with a Network Engineering degree I paid too much for and no certs to show off — most of what I actually know came from breaking things on the job and figuring out why. Fun fact: I placed 4th in my state for SkillsUSA Computer Information Technology senior year of high school, which is either an impressive head start or proof I peaked early.
+    </p>
+    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-4">
+      Like a lot of people here, Plex was my gateway drug into homelabbing. These days it's grown into a small star-system-themed lab: a 3-node Optiplex Micro cluster — Alphacentauri, Deltacephei, and Proximacentauri — running Ceph over a custom 2.5G backhaul and handling most of the workload; Gammacephei, an Unraid box running my media stack (the *arr suite, Plex, Immich); Cygnus, a Dockhand-managed game server host; Bodes, a dedicated Crafty box; and Arp142, a UNAS-PRO handling backups and photo/doc storage with an auto-backup to Backblaze. Off-site, a Linode node runs UISP for the business, and an AWS Lightsail instance runs Gatus (with ntfy likely joining it soon). All of it tied together over a 100% UniFi network with 10G backhaul. This blog is where I write about that: the wins, the 2am outages, and whatever new thing broke my lab this week.
+    </p>
+    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-4">
+      Outside the lab I run <a href="https://alexsguardian.net" target="_blank" rel="noopener noreferrer" class="text-primary underline">Alex's Guardian</a>, a small IT consultancy for local end users and small businesses, built on one rule: transparent IT, no surprises. General IT support, computer builds, CCTV installs — if it plugs in and confuses you, I've probably fixed one.
+    </p>
+    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-4">
+      I dabble in open source here and there — mostly CI/CD workflows, build pipelines, and containerizing other people's apps rather than writing new code from scratch. I also handle all the tech for my local Lions Club (website included), because apparently I can't say no to more IT work in my free time. Much to the chagrin of my wife, who is a saint for putting up with me and my hobbies.
+    </p>
+    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-4">
+      Off the clock I'm a dad (to two crazy kids), a range regular, and a sucker for vintage WW2 firearms my wallet keeps vetoing. Also got a gardening habit I'm itching to write about — just waiting until I've got my own property to set it up the way I actually want. Expect posts about that in the future!
+    </p>
     <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-      This blog follows my adventures in homelabbing. DevOps by day homelabber by night. Oh, I also run an IT consultancy business, <a href="https://alexsguardian.net" target="_blank" rel="noopener noreferrer" class="text-primary underline">Alex’s Guardian</a>, for local end users and small businesses!
+      Thanks for stopping by! If you want to support the blog (which is entirely funded personally by me), check out the Support section below. No obligations, but every little bit helps!
     </p>
   </ContentWrapper>
 
-  <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary dark:invisible motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
+  <ContentWrapper>
+    <h2 class="text-2xl font-bold font-heading mb-4 text-center motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      Find Me Elsewhere
+    </h2>
+    <ul class="flex justify-center gap-3 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      {
+        socialLinks.map(({ ariaLabel, href, icon, brandcolor }) => (
+          <li>
+            <a
+              class="group text-muted dark:text-gray-400 hover:outline-gray-100 dark:hover:outline-gray-700 hover:outline hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-3.5 inline-flex items-center"
+              aria-label={ariaLabel}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={ariaLabel}
+            >
+              <Icon
+                name={icon}
+                class="w-8 h-8 transition-colors duration-200 group-hover:text-[var(--brand-color)]"
+                style={`--brand-color: ${brandcolor}`}
+              />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </ContentWrapper>
 
   <ContentWrapper>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-      <div class="iframely-embed"><div class="iframely-responsive" style="padding-bottom: 50%; padding-top: 120px;"><a href="https://github.com/alexandzors/blog-files" data-iframely-url="//iframely.net/814sGHZ"></a></div></div><script async src="//iframely.net/embed.js"></script>
-      <div class="iframely-embed"><div class="iframely-responsive" style="padding-bottom: 50%; padding-top: 120px;"><a href="https://github.com/alexandzors/blog-comments" data-iframely-url="//iframely.net/Qbsj7VM"></a></div></div><script async src="//iframely.net/embed.js"></script>
+    <h2 class="text-2xl font-bold font-heading mb-4 text-center motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      Blog Repositories
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      {
+        repoLinks.map(({ name, description, href }) => (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block p-4 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary transition-colors duration-200"
+          >
+            <div class="flex items-center gap-2 mb-1">
+              <Icon name="tabler:brand-github" class="w-5 h-5 shrink-0" />
+              <span class="font-bold font-heading">{name}</span>
+            </div>
+            <p class="text-sm text-muted dark:text-slate-400">{description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </ContentWrapper>
+
+  <ContentWrapper>
+    <h2 class="text-2xl font-bold font-heading mb-4 text-center motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      Blog Tech Stack
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      {
+        techStack.map(({ name, description, icon }) => (
+          <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700">
+            <div class="flex items-center gap-2 mb-1">
+              <Icon name={icon} class="w-5 h-5 shrink-0" />
+              <span class="font-bold font-heading">{name}</span>
+            </div>
+            <p class="text-sm text-muted dark:text-slate-400">{description}</p>
+          </div>
+        ))
+      }
     </div>
   </ContentWrapper>
 
@@ -134,22 +243,44 @@ const metadata = {
     items={supportItems}
   />
 
+
   <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary dark:invisible motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
 
   <ContentWrapper>
-    <h2 class="text-2xl font-bold font-heading mb-2 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">Post Sponsoring</h2>
-    <span class="flex items-center mb-12 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-      <p class="mr-2 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-        I do offer post sponsoring for a small fee. However I do not do paid for reviews. <strong class="underline font-bold">I WILL NOT accept payment to write a positive review.</strong> If you are interested in sponsoring a post please reach out via email and we can discuss further details. <a
-        href="mailto:blog@alexsguardian.net" class="text-primary underline inline-flex align-middle">
-        <Icon name="tabler:mail" class="w-6 h-6 ml-1 hover:text-secondary justify-center" target="_blank" title="Email Me"/>
-      </a>
-      </p>
-    </span>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="tabler:speakerphone" class="w-5 h-5 shrink-0" />
+          <h2 class="text-xl font-bold font-heading">Post Sponsoring</h2>
+        </div>
+        <p class="text-sm text-muted dark:text-slate-400">
+          I do offer post sponsoring for a small fee. However I do not do paid reviews.{' '}
+          <strong class="underline font-bold text-default dark:text-slate-300">
+            I WILL NOT accept payment to write a positive review.
+          </strong>{' '}
+          If you're interested in sponsoring a post, reach out via{' '}
+          <a
+            href="mailto:blog@alexsguardian.net"
+            class="text-primary underline inline-flex items-center gap-1"
+            title="Email Me"
+          >
+            email <Icon name="tabler:mail" class="w-4 h-4" />
+          </a>{' '}
+          and we can discuss details.
+        </p>
+      </div>
 
-    <h2 class="text-2xl font-bold font-heading mb-2 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">GA Disclaimer</h2>
-    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-12">
-      I use Google Analytics and Search Console to track site engagement and what posts are popular. I do not serve ads or am part of targeted ad programs on any of my sites. They are only used to track site performance. Running a simple ad block on your browser should stop the script from running. :)
-    </p>
+      <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="tabler:chart-bar" class="w-5 h-5 shrink-0" />
+          <h2 class="text-xl font-bold font-heading">GA Disclaimer</h2>
+        </div>
+        <p class="text-sm text-muted dark:text-slate-400">
+          I use Google Analytics and Search Console to track site engagement and see what posts are popular. I don't
+          serve ads or take part in targeted ad programs on any of my sites — analytics are only used to track site
+          performance. A simple ad blocker will stop the script from running. :)
+        </p>
+      </div>
+    </div>
   </ContentWrapper>
 </Layout>
