@@ -62,7 +62,7 @@
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "@typescript-eslint/parser": "^8.29.0",
     "astro-auto-import": "^0.4.4",
-    "astro-compress": "2.3.7",
+    "astro-compress": "^2.4.1",
     "astro-eslint-parser": "^1.2.1",
     "astro-mdx-code-blocks": "^0.0.6",
     "eslint": "^9.21.0",
