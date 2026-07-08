@@ -30,11 +30,11 @@ Note: This is merely a guide to get started. These are the base steps to get you
 To fully complete this post you need to have a domain name registered and pointed to your Linode VM's public IP. If you do not then you can ignore the very end of this post where it demonstrates a working web server.
 </Aside>
 
-# The Environment
+## The Environment
 
 I will be running this series as if you were running on Windows 10/11 with [Visual Studio Code](https://code.visualstudio.com) installed. Now this series can also be followed fairly easily if you are running Linux setup or WSL. I am also assuming you have a general understanding of the command line interface. If you need more help, leave a comment below and I will reach out!
 
-## Pre-Requisites
+### Pre-Requisites
 
 You should have these items completed and set up before trying to follow this post.
 
@@ -47,7 +47,7 @@ You should have these items completed and set up before trying to follow this po
 - Have a Domain registered and an A record pointed to the public IP of your Linode VM.
   - I use [Google Domains](https://domains.google/) with DNS handled by [Cloudflare](https://developers.cloudflare.com/dns/zone-setups/full-setup/setup/).
 
-# Setting up the VM
+## Setting up the VM
 
 First we need to create a new user account on our VM so Actions is not logging in as `root`. To do this, first SSH into your VM as root (since we haven't setup any other users yet) and run the following commands to create a new non-root user.
 
@@ -151,7 +151,7 @@ Hit `CTRL+W` to enter search and type `PasswordAuthentication` and hit `Enter`. 
 systemctl restart sshd
 ```
 
-## Creating the File Structure
+### Creating the File Structure
 Now we need to setup and create the directory structure for Caddy on the Linode VM. Run the following commands to setup the directory and file structure for Caddy.
 
 ```shell showLineNumbers=false
@@ -226,7 +226,7 @@ yourdomain.tld {
 
 Save and close the file by hitting `CTRL + X` then `y`. We can leave the current SSH session open as we will be needing it later.
 
-# Updating the Actions pipeline
+## Updating the Actions pipeline
 
 Now that we have the VM file structure ready to go, we can update our GitHub Actions pipeline to automatically update our docker container on image updates. Navigate to our actions repository and open the `actions.yml` file with your favorite text editor. Now add the following lines at the end of the file:
 
@@ -240,7 +240,7 @@ If your Caddy directory is not in `/home/username/caddy`, you will need to chang
 
 Once you are done editing, save the file.
 
-## Updating Actions Secrets
+### Updating Actions Secrets
 
 With our actions pipeline file updated, we need to update our secrets to match. Navigate to your repository on [GitHub.com](https://github.com) and click on the Settings tab > Secrets > Actions, then create the following secrets:
 
@@ -250,7 +250,7 @@ LINODEhost | public ip / dns name of your Linode VM
 LINODEuser | username for login
 LINODEkey | SSH secret key (use the second pair's secret key not the one you used to deploy the host with.)
 
-## Updating the Repository
+### Updating the Repository
 
 Now that we have the secrets created we can update our repository.
 

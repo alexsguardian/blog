@@ -34,11 +34,11 @@ import PROMETHEUS_UI from 'grafana-prometheus-ui.webp'
 
 So you've seen a cool Dashboard on [/r/homelab](https://reddit.com/r/homelab) with graphs and status panels, and now you want one for your lab. Well let me tell you a little secret. It's actually really easy to set up! This guide series will walk you through how to set up [Grafana](https://grafana.com), [Prometheus](https://prometheus.io/docs/introduction/overview/), [InfluxDB](https://www.influxdata.com/get-influxdb/), [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/), and a few other data services that pair nicely in a homelab setting. This will be a "get your feet wet" guide series and will get you in the door of the fun world of metrics and monitoring. We will be starting from complete scratch, so to follow along make sure you read through the prerequisites below.
 
-# The Environment
+## The Environment
 
 This guide series assumes you are on Windows 10 or 11 with [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-us&gl=US), [Visual Studio Code](https://code.visualstudio.com), the [OpenSSH Client](https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui) installed and to keep this guide easy to update in the future, that you already have a Ubuntu Server or similar Linux imaged system already running and ready. If you do not know how to install Ubuntu Server, check out [this guide from Ubuntu](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview).
 
-## Pre-Requisites
+### Pre-Requisites
 
 - Have an x86 computing device (PC, Server, Workstation, Micro PC, etc.) with Ubuntu Server installed.
   - You can use a Raspberry Pi or other ARM based device. Just make sure to change docker / compose commands to use built for ARM images instead.
@@ -48,7 +48,7 @@ This guide series assumes you are on Windows 10 or 11 with [Windows Terminal](ht
 - Have a spare monitor and keyboard handy.
 - Your favorite drink and snacks within reach. ( A must for hobbies )
 
-# Grafana
+## Grafana
 
 If you are not familiar with Grafana, let me give you a quick run down on what it is and is not. Grafana is a data visualization tool that allows you to observe your data using charts, graphs, etc. It is not a replacement for things like [Homer](https://github.com/bastienwirtz/homer) / [Dashy](https://github.com/Lissy93/dashy) or other similar dashboard software. Basically if you are wanting to monitor service metrics / logs then Grafana is for you.
 
@@ -56,7 +56,7 @@ If you are not familiar with Grafana, let me give you a quick run down on what i
 This guide series was originally created with Grafana version 9!
 </Aside>
 
-## Connecting to the Machine
+### Connecting to the Machine
 
 First thing we need to do is hook up Visual Studio Code (VSC) to the machine we will be running Grafana, etc. on. For this we will be using the Remote - SSH extension for VSC. ( If you don't have the extension installed yet, go ahead and install it. )
 
@@ -93,7 +93,7 @@ VSC will set up code server on your machine on first log in. The progress will b
 ![Setting up Remote SSH](/posts/2022/07/22/grafana-setup_remote_SSH-animated.webp)
 <ImgDesc>Setting up the Remote SSH extension for VSC</ImgDesc>
 
-## Installing Docker
+### Installing Docker
 
 <Aside type="note">
 To make this guide easy we will be using Docker to run our services with Grafana. This will make it easy to add / remove services without bloating the host OS with dependencies.
@@ -194,7 +194,7 @@ If you get a "Do you trust the authors of these files?" prompt, like the example
 <Image src={VSC_RESTRICTED} alt="VSC Restricted Mode" width={800} height={600} />
 </Aside>
 
-# Setting up Prometheus
+## Setting up Prometheus
 
 Now that we have Docker installed and configured we can start setting up our services. First up is Prometheus! We will be using Prometheus to gather metrics from our host machine via Node Exporter. First let's create a directory structure for Prometheus.
 
@@ -235,7 +235,7 @@ volumes:
 
 Save the file using `CTRL+S`. You can close it by clicking the `X` next to the name in the tab bar.
 
-## Deploying Node Exporter
+### Deploying Node Exporter
 
 Since we are deploying Node Exporter as another Docker container, we need to create the compose file for it. So let's make a new directory in `/opt/docker/prometheus` to house it.
 
@@ -287,7 +287,7 @@ You should see an output like the following:
 
 <Image src={PROMETHEUS_UI} alt="Prometheus Graph UI" width={800} height={600} />
 
-## Configuring Prometheus to Scrape Node Exporter
+### Configuring Prometheus to Scrape Node Exporter
 
 Now that we have Node Exporter running we can update Prometheus to scrape it for data. Edit the `prometheus.yml` file with the following:
 
@@ -312,7 +312,7 @@ scrape_configs:
 
 Replace `<your-machine-ip>` with the IP of your Docker host. Then save the file using `CTRL+S`. You can close it by clicking the `X` next to the name in the tab bar.
 
-## Deploying Prometheus
+### Deploying Prometheus
 
 To deploy Prometheus, run the following command inside the `/opt/docker/prometheus` directory.
 
@@ -330,7 +330,7 @@ You should see an output similar to the one pictured below.
 
 <Image src={PROMETHEUS_UI} alt="Prometheus Graph UI" width={800} height={600} />
 
-# Configuring Grafana to Use Prometheus
+## Configuring Grafana to Use Prometheus
 
 With Prometheus running and scraping metrics from our Node Exporter, we can now configure Grafana to read that data and display it in a dashboard. So first login to Grafana, then follow the steps below to set up the Prometheus data source and configure the dashboard.
 
@@ -365,7 +365,7 @@ After you click Import, you will be taken to your new dashboard! You can now exp
 
 <Image src={NODE_EXPORTER} alt="Node Exporter Dashboard" width={800} height={600} />
 
-# Conclusion
+## Conclusion
 
 In an effort to keep this guide series easy to follow, I have broken it up into a series of posts. This is just part 1! The [next part](/posts/2022/09/17/Grafana-InfluxDB) we will be covering InfluxDB and Telegraf. As always if you run into any issues let me know down below or reach out via email!
 

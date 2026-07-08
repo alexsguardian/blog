@@ -19,18 +19,18 @@ import FTCDisclaimer from '~/components/custom/FTCDisclaimer.astro'
 
 Welcome to part 4 of my GitHub Actions post series. This part will cover how to build and release a binary version of Caddy from GitHub Actions. In [part 1](/posts/2022/06/12/AutoGHActionsDocker) we got our Actions pipeline up and building a Docker container for our custom Caddy server image. In [Part 2](/posts/2022/06/20/AutoGHActionsDiun) we automated that process to kick off when changes were detected in the parent [Caddy](https://hub.docker.com/_/caddy) image using [Diun](https://crazymax.dev/diun). And in [part 3](/posts/2022/06/25/AutoGHDeployLinode) we automated updating our Linode VM to pull and re-deploy our updated container image. As this post is the 4th and final part of the GitHub Actions series, make sure to check out the previous 3 parts before trying to follow along with this post!
 
-# The Environment
+## The Environment
 
 I will be running this series as if you were running on Windows 10/11 with [Visual Studio Code](https://code.visualstudio.com) installed. Now this series can also be followed fairly easily if you are running on a straight Linux setup or WSL. I am also assuming you have a general understanding of the command line interface and are somewhat familiar with [Docker](https://docker.com). If you need more help leave a comment below and I will reach out!
 
-## Pre-Requisites
+### Pre-Requisites
 
 You should have these items created and set up before trying to follow this post.
 
 - Have followed the previous 3 parts in this series.
   - [Part 1](/posts/2022/06/12/AutoGHActionsDocker/), [Part 2](/posts/2022/06/20/AutoGHActionsDiun/), and [Part 3](/posts/2022/06/25/AutoGHDeployLinode).
 
-# Updating the Pipeline
+## Updating the Pipeline
 
 First thing we need to do is to update our `actions.yml` file to include the binary building steps. Now this is completely up to you but I prefer to have the binary steps built before doing Docker images. This makes it easier to catch errors during the build process before accidentally pushing a broken image to your registry. Open the `actions.yml` file in your repo and add the following lines to it.
 

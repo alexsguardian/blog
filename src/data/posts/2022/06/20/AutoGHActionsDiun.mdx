@@ -28,11 +28,11 @@ In my [previous post](https://blog.alexsguardian.net/posts/AutoGHActionsDocker/)
 
 Diun is a cool utility that watches a docker registry for updates and can run notifications based on them.
 
-# The Environment
+## The Environment
 
 I will be running this series as if you were running on Windows 10/11 with [Visual Studio Code](https://code.visualstudio.com) installed. Now this series can also be followed fairly easily if you are running Linux setup or WSL. I am also assuming you have a general understanding of the command line interface. If you need more help, leave a comment below and I will reach out!
 
-## Pre-Requisites
+### Pre-Requisites
 
 You should have these items created and set up before following this post.
 
@@ -41,7 +41,7 @@ You should have these items created and set up before following this post.
 - Have an SSH client installed or have OpenSSH client enabled if running on Windows 10/11.
 - Completed the [previous post](https://blog.alexsguardian.net/posts/AutoGHActionsDocker/).
 
-# Deploying Diun
+## Deploying Diun
 
 Before we deploy Diun we need to setup the directory for Diun to house configuration files in. SSH to your Docker machine and run the following commands:
 
@@ -73,7 +73,7 @@ diun
 └── docker-compose.yml
 ```
 
-## Configuring Diun
+### Configuring Diun
 
 Now that we have our directory and file structure ready for Diun, we need to tell it what to do. First edit the `config.yml` file.
 
@@ -177,7 +177,7 @@ Diun can be configured by environment variables instead of mounting host paths. 
 
 `CTRL + X` then `Y` to save and close the file.
 
-## Starting Diun
+### Starting Diun
 
 Now that we have all of our config/script files configured we can start Diun. While in the `~/diun` directory, run:
 

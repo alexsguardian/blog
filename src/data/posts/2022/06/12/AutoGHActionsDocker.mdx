@@ -27,11 +27,11 @@ I used to run a local Jenkins set up to automatically build and push my custom d
 
 We will be using [Caddy](https://caddyserver.com/) as our base container for this post series. A lot of the building steps are already provided by the Caddy team which makes learning a bit easier.
 
-# The Environment
+## The Environment
 
 I will be running this series as if you were running on Windows 10/11 with [Visual Studio Code](https://code.visualstudio.com) installed. Now this series can also be followed fairly easily if you are running on a straight Linux setup or WSL. I am also assuming you have a general understanding of a command line interface and a vague familiarity with [Docker](https://docker.com). If you need more help leave a comment below and I will reach out!
 
-## Pre-Requisites
+### Pre-Requisites
 
 You should have these items created and set up before following this post.
 
@@ -47,7 +47,7 @@ You can use GitHub's container registry instead of Docker Hub. You will just hav
 
 *insert Jerry Rig Everything "Let's get started."*
 
-# Creating and Cloning the Repository
+## Creating and Cloning the Repository
 
 The first thing we need to do is get our repository up and going on GitHub. The easiest way to do this is to first create the repository on GitHub using the [web interface](https://github.com/new). Can be public or private, choice is yours.
 
@@ -83,7 +83,7 @@ Change your directory to the newly cloned git repo.
 cd $env.USERPROFILE/Documents/git/yourgitrepo
 ```
 
-# Creating the Files
+## Creating the Files
 
 Now that we have our repository setup and cloned locally we can start adding files. Type `code .` inside the terminal while in the git repository to launch VSC. Once it's launched create a new file called `Dockerfile`. Then copy the following into the new file:
 
@@ -166,11 +166,11 @@ gh-actions-blog-guide
 
 <br />
 
-# Creating GitHub Actions Secrets
+## Creating GitHub Actions Secrets
 
 Before we can run the actions pipeline, we need to setup our new repository with secrets. These secrets will be used to login to your Docker Hub account from inside the Actions CLI. 
 
-## Obtaining an Access Token for Docker Hub
+### Obtaining an Access Token for Docker Hub
 
 <Aside type="note">
 If you are using GitHub's container registry then you can skip this step.
@@ -181,7 +181,7 @@ First login to your Docker Hub account and go to [Account Settings > Security](h
 ![Docker Hub Access Token](gh-docker_hub_secret.webp)
 <ImgDesc>Creating a new access token in Docker Hub</ImgDesc>
 
-## Adding GitHub Repository Secrets
+### Adding GitHub Repository Secrets
 
 Navigate to your repository and go to `Settings > Security > Secrets > Actions` and then click on `New repository secret`. Create two secrets with the following info:
 
@@ -202,7 +202,7 @@ Once done your Actions secrets should look similar to this:
 ![GitHub Actions Secrets](gh-actions-secrets.webp)
 <ImgDesc>GitHub Actions secrets configuration</ImgDesc>
 
-# Running the Job
+## Running the Job
 
 Now that we have everything ready we can push our local changes to GitHub. For this guide series, we will be working directly off of the main (master) branch. Run the following commands to push your changes.
 
