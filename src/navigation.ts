@@ -35,6 +35,7 @@ export const footerData = {
   socialLinks: [
     { ariaLabel: 'Bluesky', icon: 'tabler:brand-bluesky', href: 'https://bsky.app/profile/alexsguardian.net', brandcolor: '#4f9bd9'},
     { ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/alexandzors', brandcolor: '#000'},
+    { ariaLabel: 'LinkedIn', icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/in/alexander-henderson-831959168/', brandcolor: '#0A66C2' },
     { ariaLabel: 'YouTube', icon: 'tabler:brand-youtube', href: 'https://www.youtube.com/@alexandzors', brandcolor: '#DB4437' },
     { ariaLabel: `Alex's Guardian`, icon: 'tabler:building', href: 'https://alexsguardian.net', brandcolor: '#6E06DF' },
     { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml'), brandcolor: '#ee802f' },
