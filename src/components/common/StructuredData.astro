@@ -1,7 +1,7 @@
 ---
 import type { ImageMetadata } from 'astro';
-import { SITE } from 'astrowind:config';
 import { getCanonical, getHomePermalink, getPermalink } from '~/utils/permalinks';
+import { authorSameAs } from '~/navigation';
 
 export interface Props {
   title: string;
@@ -26,10 +26,7 @@ const blogPosting = {
   image: imageUrl,
   datePublished: publishDate?.toISOString(),
   dateModified: (updateDate ?? publishDate)?.toISOString(),
-  author: {
-    '@type': 'Person',
-    name: author || SITE.name,
-  },
+  author: author ? { '@type': 'Person', name: author, sameAs: authorSameAs } : undefined,
   mainEntityOfPage: {
     '@type': 'WebPage',
     '@id': String(url),

@@ -44,3 +44,7 @@ export const footerData = {
     © 2025 - <a class="text-blue-600 underline dark:text-muted" href="https://github.com/alexandzors"> Alexander Henderson</a>. Some rights reserved. <span class="flex"> Powered by&nbsp;<a class="text-blue-600 underline dark:text-muted" href="https://github.com/onwidget/astrowind">Astrowind</a>&nbsp;🚀 </span>
   `,
 };
+
+export const authorSameAs = footerData.socialLinks
+  .filter((link) => link.ariaLabel !== 'RSS')
+  .map((link) => link.href);

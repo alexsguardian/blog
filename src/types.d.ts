@@ -21,6 +21,8 @@ export interface Post {
   /** Optional summary of post content. */
   excerpt?: string;
   /**  */
+  summary?: string;
+  /**  */
   image?: ImageMetadata | string;
 
   /**  */

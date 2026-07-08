@@ -19,6 +19,7 @@ import astrowind from './vendor/integration';
 import pagefind from 'astro-pagefind';
 
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
+import { buildLastmodMap } from './src/utils/sitemapLastmod';
 import a11yEmoji from '@fec/remark-a11y-emoji';
 import remarkDirective from 'remark-directive';
 import emoji from 'remark-emoji';
@@ -26,6 +27,8 @@ import emoji from 'remark-emoji';
 import vercel from '@astrojs/vercel';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const postLastmodMap = await buildLastmodMap();
 
 const hasExternalScripts = true;
 const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroIntegration)[] = []) =>
@@ -36,7 +39,12 @@ export default defineConfig({
   cacheDir: './cache',
 
   integrations: [
-    sitemap(),
+    sitemap({
+      serialize(item) {
+        const lastmod = postLastmodMap[new URL(item.url).pathname];
+        return lastmod ? { ...item, lastmod: lastmod.toISOString() } : item;
+      },
+    }),
 
     icon({
       include: {
