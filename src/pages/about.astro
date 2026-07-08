@@ -155,15 +155,13 @@ const metadata = {
     <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-4">
       I dabble in open source here and there — mostly CI/CD workflows, build pipelines, and containerizing other people's apps rather than writing new code from scratch. I also handle all the tech for my local Lions Club (website included), because apparently I can't say no to more IT work in my free time. Much to the chagrin of my wife, who is a saint for putting up with me and my hobbies.
     </p>
-    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-4">
       Off the clock I'm a dad (to two crazy kids), a range regular, and a sucker for vintage WW2 firearms my wallet keeps vetoing. Also got a gardening habit I'm itching to write about — just waiting until I've got my own property to set it up the way I actually want. Expect posts about that in the future!
     </p>
     <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
       Thanks for stopping by! If you want to support the blog (which is entirely funded personally by me), check out the Support section below. No obligations, but every little bit helps!
     </p>
   </ContentWrapper>
-
-  <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary dark:invisible motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
 
   <ContentWrapper>
     <h2 class="text-2xl font-bold font-heading mb-4 text-center motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
@@ -193,8 +191,6 @@ const metadata = {
     </ul>
   </ContentWrapper>
 
-  <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary dark:invisible motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
-
   <ContentWrapper>
     <h2 class="text-2xl font-bold font-heading mb-4 text-center motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
       Blog Repositories
@@ -219,16 +215,12 @@ const metadata = {
     </div>
   </ContentWrapper>
 
-  <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary dark:invisible motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
-
   <Support
     title="Support the Blog"
     subtitle="I do not run ads on my blog as they suck. So in order to keep up with the small over head of running the site I have listed a few ways below that you can support me. Zero obligations but every little bit helps!"
     highlight="Support Options"
     items={supportItems}
   />
-
-  <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary dark:invisible motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
 
   <ContentWrapper>
     <h2 class="text-2xl font-bold font-heading mb-4 text-center motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
@@ -252,19 +244,40 @@ const metadata = {
   <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary dark:invisible motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
 
   <ContentWrapper>
-    <h2 class="text-2xl font-bold font-heading mb-2 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">Post Sponsoring</h2>
-    <span class="flex items-center mb-12 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-      <p class="mr-2 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-        I do offer post sponsoring for a small fee. However I do not do paid for reviews. <strong class="underline font-bold">I WILL NOT accept payment to write a positive review.</strong> If you are interested in sponsoring a post please reach out via email and we can discuss further details. <a
-        href="mailto:blog@alexsguardian.net" class="text-primary underline inline-flex align-middle">
-        <Icon name="tabler:mail" class="w-6 h-6 ml-1 hover:text-secondary justify-center" target="_blank" title="Email Me"/>
-      </a>
-      </p>
-    </span>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="tabler:speakerphone" class="w-5 h-5 shrink-0" />
+          <h2 class="text-xl font-bold font-heading">Post Sponsoring</h2>
+        </div>
+        <p class="text-sm text-muted dark:text-slate-400">
+          I do offer post sponsoring for a small fee. However I do not do paid reviews.{' '}
+          <strong class="underline font-bold text-default dark:text-slate-300">
+            I WILL NOT accept payment to write a positive review.
+          </strong>{' '}
+          If you're interested in sponsoring a post, reach out via{' '}
+          <a
+            href="mailto:blog@alexsguardian.net"
+            class="text-primary underline inline-flex items-center gap-1"
+            title="Email Me"
+          >
+            email <Icon name="tabler:mail" class="w-4 h-4" />
+          </a>{' '}
+          and we can discuss details.
+        </p>
+      </div>
 
-    <h2 class="text-2xl font-bold font-heading mb-2 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">GA Disclaimer</h2>
-    <p class="motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade mb-12">
-      I use Google Analytics and Search Console to track site engagement and what posts are popular. I do not serve ads or am part of targeted ad programs on any of my sites. They are only used to track site performance. Running a simple ad block on your browser should stop the script from running. :)
-    </p>
+      <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700">
+        <div class="flex items-center gap-2 mb-2">
+          <Icon name="tabler:chart-bar" class="w-5 h-5 shrink-0" />
+          <h2 class="text-xl font-bold font-heading">GA Disclaimer</h2>
+        </div>
+        <p class="text-sm text-muted dark:text-slate-400">
+          I use Google Analytics and Search Console to track site engagement and see what posts are popular. I don't
+          serve ads or take part in targeted ad programs on any of my sites — analytics are only used to track site
+          performance. A simple ad blocker will stop the script from running. :)
+        </p>
+      </div>
+    </div>
   </ContentWrapper>
 </Layout>
