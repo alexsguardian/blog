@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 import Image from '~/components/common/Image.astro';
 import PostTags from '~/components/blog/Tags.astro';
 import SocialShare from '~/components/common/SocialShare.astro';
+import Aside from '~/components/widgets/Aside.astro';
 import { getPermalink } from '~/utils/permalinks';
 import { getFormattedDate } from '~/utils/utils';
 
@@ -27,6 +28,17 @@ const { post, url } = Astro.props;
         <p>
           <Icon name="tabler:calendar" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
           <time datetime={String(post.publishDate)} class="inline-block">{getFormattedDate(post.publishDate)}</time>
+          {
+            post.updateDate && (
+              <>
+                {' '}
+                · <Icon name="tabler:refresh" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
+                <time datetime={String(post.updateDate)} class="inline-block">
+                  Updated {getFormattedDate(post.updateDate)}
+                </time>
+              </>
+            )
+          }
           {
             post.author && (
               <>
@@ -68,6 +80,16 @@ const { post, url } = Astro.props;
       >
         {post.excerpt}
       </p>
+
+      {
+        post.summary && (
+          <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <Aside type="tip" title="TL;DR">
+              {post.summary}
+            </Aside>
+          </div>
+        )
+      }
 
       {
         post.image ? (
