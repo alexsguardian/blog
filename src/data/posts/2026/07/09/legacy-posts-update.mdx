@@ -1,0 +1,72 @@
+---
+publishDate: 2026-07-09T11:30:00-04:00
+title: "Legacy Posts Update + Blog Changes"
+excerpt: "A look at the changes to the blog and the import of legacy posts."
+category: Updates
+tags:
+  - updates
+  - blog info
+image: '~/assets/images/banners/default_banner.webp'
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+
+import updatePostMeme from './update-post-meme.webp';
+import seoAudit from './legacy-seo.webp';
+import geoAudit from './legacy-ai.webp';
+import stonksMeme from './stonks-meme-cat.gif';
+
+<Image src={updatePostMeme} alt="Decision meme about either making update posts or content posts" class="rounded-lg shadow-lg flex mx-auto" />
+
+All jokes aside, I have been really busy with work and such this year. I got my promotion to Senior Developer Operations Engineer, and it's been keeping me rather busy. I was already basically a sudo senior but did not carry the title until recently. While working on the two recent posts about Tracearr, which if you haven't read yet, you can check them out <a href="/posts/2026/06/30/meet-tracearr-part-1">here</a> and <a href="/posts/2026/07/02/meet-tracearr-part-2-the-interview">here</a>, I realized that my blog needed some love. So lets go through some of these updates, shall we?
+
+## About Page Overhaul
+
+The about page has been overhauled to include more background information about me, my work, and my blog. I also finally added social links where you can find me on other platforms + added a tech stack section for nerds that want to see what the blog is built on. The support section also got some love and updates, if you are feeling generous. :wink:
+
+You may also notice an update to my disclaimers. Which leads into the next update.
+
+### Blog Disclaimers
+
+Being a Senior DevOps Engineer I get much more exposure to the industry, and as such, I need to make clear that my opinions are my own and not those of my employer, or the company I run (<a href="https://alexsguardian.com">Alex's Guardian</a>).
+
+I have also added a disclaimer about AI use and this blog. Following <a href="https://responsibleaidisclosure.com/">RAID or the Responsible AI Disclosure guidelines</a>, I have added a disclaimer about AI use and this blog. I do not use AI to generate content for this blog, but I do use it to help me with grammar if LanguageTool doesn't catch it. It also helps me maintain the actual code base of this blog as I, unfortunately, have limited time to do overhauls of pages, updating deps that break things, as well as keeping the site updated with the latest Tailwind/TypeScript/Astro versions. The theme I built this blog on, Astrowind, appears to be having a bumpy patch when it comes to updates. No idea if v2 will ever land.
+
+Anyway, I wanted to be open and transparent about this usage. I give my word that none of my content will ever be AI generated, as like you, I hate reading it too. Unfortunately, I know this will turn some of you away and that's okay. I won't be mad :slightly_smiling_face:.
+
+## Search, Guides, and Other Updates
+
+<a href="/search">Search</a> got a major visual overhaul and now looks nicer. It also works much better at only searching blog posts too!
+
+The <a href="/guides">guides</a> page also got some TLC and looks much better and more inline with the rest of the blog.
+
+Expect more updates to the general theme of the blog as I keep doing my passes. Astro v6 upgrade soon<sup>TM</sup>.
+
+## Legacy Posts
+
+For long, long time readers you probably remember my original blog that used to actually live at the root domain, alexsguardian.net. Well good news, and big thanks to the Wayback Machine, I was able to recover a lot of the old posts that were lost when I moved this blog around over the years. I was able to successfully restore them from straight HTML copies and a little Claude magic and manual image importing. However, some of the post images have been lost to time and are noted throughout the posts. This was more for historical purposes and the redirects have been removed. Feast your eyes on the early days of this blog and my, semi, awful writing!
+
+## SEO & GEO
+
+<Image src={stonksMeme} alt="Stonks meme cat" class="rounded-lg shadow-lg flex mx-auto motion-reduce:hidden" />
+
+With the help of an audit from Claude, I was able to fix the SEO for this blog. It now ranks way, way better in search results. I also added GEO to my blog so AI search engines, since lots of people seem to be using them these days, can find me easier.
+
+<Image src={seoAudit} alt="SEO audit results for the blog" class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc><a href="https://www.seoreviewtools.com/google-seo-checker/">SEO Review Tools - Google SEO Checker</a></ImgDesc>
+
+<Image src={geoAudit} alt="GEO audit results for the blog" class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc><a href="https://www.seoreviewtools.com/ai-brand-visibility-report/">SEO Review Tools - AI Brand Visibility Report</a></ImgDesc>
+
+AI one could use some work, BUT, I now have the info on the blog side that will start helping with it.
+
+## Closing Thoughts
+
+I have a lot of plans for this blog, and I will be doing my best to keep it updated with new content going forward. As of now I have a few posts in the works. One will be ready to post in a week or so. If you have any suggestions for posts or interviews, reach out in the comments below or hit me up on one of my socials.
+
+For now, carry on and keep labbing!
+
+<sub>P.S. The memes are not going anywhere.</sub>
