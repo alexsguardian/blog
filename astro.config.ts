@@ -18,7 +18,7 @@ import astrowind from './vendor/integration';
 
 import pagefind from 'astro-pagefind';
 
-import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
+import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin, externalLinksRehypePlugin } from './src/utils/frontmatter';
 import { buildLastmodMap } from './src/utils/sitemapLastmod';
 import a11yEmoji from '@fec/remark-a11y-emoji';
 import remarkDirective from 'remark-directive';
@@ -110,7 +110,7 @@ export default defineConfig({
 
   markdown: {
     remarkPlugins: [readingTimeRemarkPlugin, remarkDirective, emoji, a11yEmoji],
-    rehypePlugins: [responsiveTablesRehypePlugin, lazyImagesRehypePlugin],
+    rehypePlugins: [responsiveTablesRehypePlugin, lazyImagesRehypePlugin, externalLinksRehypePlugin],
   },
 
   vite: {
