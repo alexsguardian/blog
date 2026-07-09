@@ -256,7 +256,7 @@ As you can see the active node switches as each keepalived service is terminated
 
 ### HA Caddy
 
-The final step before I could start using the cluster was to set up a load balancer/reverse proxy. There are a few different options but, if you've read any of my <a href="/tag/caddy" target="_blank" class="underline">previous posts</a> you know I love using <a href="https://caddyserver.com/" target="_blank" class="underline">Caddy</a>. With its easy-to-use configuration and automatic certificate management makes it hard to beat. Also, Caddy is a great choice for this since it automatically clusters itself if all instances use the same storage volume. 
+The final step before I could start using the cluster was to set up a load balancer/reverse proxy. There are a few different options but, if you've read any of my <a href="/tag/caddy" class="underline">previous posts</a> you know I love using <a href="https://caddyserver.com/" target="_blank" class="underline">Caddy</a>. With its easy-to-use configuration and automatic certificate management makes it hard to beat. Also, Caddy is a great choice for this since it automatically clusters itself if all instances use the same storage volume. 
 
 First thing I did was create the new overlay network for Caddy. This network would be for any services that I wanted to be able to access from outside the cluster. 
 

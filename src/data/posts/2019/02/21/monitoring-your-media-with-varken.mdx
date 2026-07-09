@@ -1,0 +1,332 @@
+---
+publishDate: 2019-02-21T14:00:00-05:00
+title: "Monitoring your Plex Media Server with Varken"
+excerpt: "Deploy Varken to send Plex, Sonarr, Radarr, and Tautulli stats to InfluxDB and build a Grafana dashboard."
+category: Grafana
+image: '~/assets/images/banners/grafana_varken_banner.webp'
+tags:
+  - varken
+  - influxdb
+  - grafana
+  - plex
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+import varkenDiagram from './varken-dashboard.webp';
+import varkenComposeOutput from './varken-compose.webp';
+import varkenDbCreate from './varken-dbCreate.webp';
+import varkenDbUser from './varken-dbUser.webp';
+import varkenDashboardImport from './varken-dashboardImport.webp';
+
+<Aside type="note">
+  There's a newer, updated version of this guide: <a href="/posts/2022/12/04/monitoringmediavarken">Monitoring Your Plex Media Server with Varken [Dev]</a>. This post is kept around for historical purposes.
+</Aside>
+
+Before we get started, you should go buy the guys over at Varken a <a href="https://ko-fi.com/varken">coffee</a> and <a href="https://github.com/Boerderij/Varken">star their repo</a>. Varken makes the data collection of Plex server stats via companion apps stupid easy.
+
+For this to work you will need at least one of the following services configured and running:
+
+<a href="https://sonarr.tv/">Sonarr</a>, <a href="https://radarr.video/">Radarr</a>, <a href="https://lidarr.audio/">Lidarr</a>, <a href="https://tautulli.com/">Tautulli</a>, <a href="https://ombi.io/">Ombi</a>
+
+<Image src={varkenDiagram} alt="Diagram of Varken pulling stats from Sonarr, Radarr, Lidarr, Tautulli, and Ombi into InfluxDB and Grafana" class="rounded-lg shadow-lg flex mx-auto" />
+
+If you followed my guide, <a href="/guides">here</a>, then deploying Varken into your InfluxDB Docker network setup should be rather easy. First SSH to your docker host. Then create the config directory and copy down my compose file for Varken.
+
+```shell
+mkdir /opt/containers/varken && curl https://gist.githubusercontent.com/alexandzors/39760b9e742d6b9b28a0164af8648ac8/raw/091f7b35ad2e44fdaa46f7c410d97e2292f9905c/varken-compose.yml -o /opt/containers/varken/varken-compose.yml
+```
+
+<Image src={varkenComposeOutput} alt="Terminal output after downloading the Varken compose file" class="rounded-lg shadow-lg flex mx-auto" />
+
+Now we need to edit the compose file and enter the required info for our services. (You can mount a pre-defined config file to Varken if you do not want to use environment variables! Also the official Varken compose file can be found <a href="https://github.com/Boerderij/Varken/blob/master/docker-compose.yml">here</a>, which includes Grafana and InfluxDB.)
+
+```shell
+nano /opt/containers/varken/varken-compose.yml
+```
+
+Change the volumes section to match your setup. Then edit the following entries under the "environment" section:
+
+| Variable | Value |
+|---|---|
+| TZ | your Timezone |
+| VRKN_GLOBAL_MAXMIND_LICENSE_KEY | <a href="https://wiki.cajun.pro/link/5#bkmrk-maxmind">MaxMind key for GEOIP DB</a> |
+| VRKN_INFLUXDB_URL | influx |
+| VRKN_INFLUXDB_USERNAME | varken |
+| VRKN_INFLUXDB_PASSWORD | 'password' |
+| VRKN_TAUTULLI_1_URL | url for your Tautulli install |
+| VRKN_TAUTULLI_1_APIKEY | Tautulli API key |
+| VRKN_SONARR_1_URL | url for your Sonarr install |
+| VRKN_SONARR_1_APIKEY | Sonarr API key |
+| VRKN_RADARR_1_URL | url for your Radarr install |
+| VRKN_RADARR_1_APIKEY | Radarr API key |
+| VRKN_OMBI_1_URL | url for your Ombi install |
+| VRKN_OMBI_1_APIKEY | Ombi API key |
+
+Save and close the file `CTRL+X then Y`. Once the file is closed we can go ahead and create the varken database / varken user in Influx. (-u root:password is your InfluxDB root/admin user!)
+
+```shell
+curl -XPOST http://localhost:8086/query -u root:password --data-urlencode "q=CREATE DATABASE varken"
+```
+
+<Image src={varkenDbCreate} alt="Terminal output after creating the Varken InfluxDB database" class="rounded-lg shadow-lg flex mx-auto" />
+
+Create the user for Varken using the password you specified in the config earlier. Then assign user permissions.
+
+```shell
+curl -XPOST http://localhost:8086/query -u root:password --data-urlencode "q=CREATE USER varken WITH PASSWORD 'password'"
+curl -XPOST http://localhost:8086/query -u root:password --data-urlencode "q=GRANT WRITE ON varken TO varken"
+curl -XPOST http://localhost:8086/query -u root:password --data-urlencode "q=GRANT READ ON varken TO grafana"
+```
+
+<Image src={varkenDbUser} alt="Terminal output after creating the Varken InfluxDB user and permissions" class="rounded-lg shadow-lg flex mx-auto" />
+
+Deploy Varken:
+
+```shell
+docker-compose -f /opt/containers/varken/varken-compose.yml up -d
+```
+
+<Aside type="note">
+  If these steps stop working, check out the <a href="http://wiki.cajun.pro/books/varken">Varken wiki</a> for up-to-date installation instructions as well as other general support info.
+</Aside>
+
+## Importing the Varken dashboard
+
+First we need to set up the data source for Varken. Navigate to Grafana, log in, and then go to your data sources configuration page. Click `Add data source` and then click InfluxDB. Input the following:
+
+- Name: InfluxDB [Varken]
+- URL: http://influxdb_influx_1:8086
+- Database: varken
+- User: grafana
+- Password: 'grafana user password'
+
+The Grafana user info was defined if you followed my <a href="/guides">guide</a>, however if you did not you can substitute these credentials with the varken user instead.
+
+Click `Save & Test`. Then click `+` > `Import`. In the Grafana.com Dashboard, import ID `9585`.
+
+<Image src={varkenDashboardImport} alt="Grafana dashboard import screen for the Varken dashboard" class="rounded-lg shadow-lg flex mx-auto" />
+
+Fill out the info to match your setup and make sure you select `varken` in the **varken** dropdown box. Once done, click `Import`.
+
+<Aside type="note">
+  Varken does not log history! Data is only logged the moment Varken is started the first time. This may cause some of your panels to appear blank (Device Types, etc). Fire up a Plex stream quick and it should populate. If it does not, check your container log and look for errors. `docker logs -f containername`.
+</Aside>
+
+## Optional
+
+Here are a few panel JSONs for extra panels you can add to your Varken dashboard.
+
+```json
+{
+  "aliasColors": {
+    "": "#b7dbab",
+    "AAC": "#f2c96d",
+    "AC3": "#70dbed",
+    "DCA": "#f2c96d",
+    "OPUS": "#f29191"
+  },
+  "breakPoint": "50%",
+  "cacheTimeout": null,
+  "combine": {
+    "label": "Other",
+    "threshold": ".04"
+  },
+  "datasource": "InfluxDB [Varken]",
+  "decimals": 0,
+  "fontSize": "110%",
+  "format": "none",
+  "gridPos": {
+    "h": 8,
+    "w": 4,
+    "x": 12,
+    "y": 4
+  },
+  "hideTimeOverride": true,
+  "id": 59,
+  "interval": null,
+  "legend": {
+    "percentage": true,
+    "percentageDecimals": 0,
+    "show": true,
+    "sort": "total",
+    "sortDesc": true,
+    "values": false
+  },
+  "legendType": "On graph",
+  "links": [],
+  "maxDataPoints": 3,
+  "nullPointMode": "connected",
+  "options": {},
+  "pieType": "donut",
+  "pluginVersion": "6.5.2",
+  "strokeWidth": "1",
+  "targets": [
+    {
+      "alias": "$tag_stream_audio_codec",
+      "groupBy": [
+        {
+          "params": [
+            "stream_audio_codec"
+          ],
+          "type": "tag"
+        }
+      ],
+      "measurement": "Tautulli",
+      "orderByTime": "ASC",
+      "policy": "default",
+      "refId": "A",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "hash"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "distinct"
+          },
+          {
+            "params": [],
+            "type": "count"
+          }
+        ]
+      ],
+      "tags": [
+        {
+          "key": "server",
+          "operator": "=",
+          "value": "1"
+        },
+        {
+          "condition": "AND",
+          "key": "type",
+          "operator": "=",
+          "value": "Session"
+        }
+      ]
+    }
+  ],
+  "timeFrom": "2w",
+  "timeShift": null,
+  "title": "Stream Audio Codec",
+  "type": "grafana-piechart-panel",
+  "valueName": "total"
+}
+```
+
+```json
+{
+  "aliasColors": {
+    "0.7 Mbps 328p": "#9ac48a",
+    "1.5 Mbps 480p": "#f2c96d",
+    "2 Mbps 720p": "#b7dbab",
+    "3 Mbps 720p": "#f2c96d",
+    "4 Mbps 720p": "#f29191",
+    "Original": "#70dbed"
+  },
+  "breakPoint": "50%",
+  "cacheTimeout": null,
+  "combine": {
+    "label": "Other",
+    "threshold": ".04"
+  },
+  "datasource": "InfluxDB [Varken]",
+  "decimals": 0,
+  "fontSize": "110%",
+  "format": "none",
+  "gridPos": {
+    "h": 8,
+    "w": 4,
+    "x": 8,
+    "y": 4
+  },
+  "hideTimeOverride": true,
+  "id": 69,
+  "interval": null,
+  "legend": {
+    "percentage": true,
+    "percentageDecimals": 0,
+    "show": true,
+    "sort": "total",
+    "sortDesc": true,
+    "values": false
+  },
+  "legendType": "On graph",
+  "links": [],
+  "maxDataPoints": 3,
+  "nullPointMode": "connected",
+  "options": {},
+  "pieType": "donut",
+  "pluginVersion": "6.5.2",
+  "strokeWidth": "1",
+  "targets": [
+    {
+      "alias": "$tag_quality_profile",
+      "groupBy": [
+        {
+          "params": [
+            "quality_profile"
+          ],
+          "type": "tag"
+        }
+      ],
+      "measurement": "Tautulli",
+      "orderByTime": "ASC",
+      "policy": "default",
+      "refId": "A",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "hash"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "distinct"
+          },
+          {
+            "params": [],
+            "type": "count"
+          }
+        ]
+      ],
+      "tags": [
+        {
+          "key": "server",
+          "operator": "=",
+          "value": "1"
+        },
+        {
+          "condition": "AND",
+          "key": "type",
+          "operator": "=",
+          "value": "Session"
+        }
+      ]
+    }
+  ],
+  "timeFrom": "2w",
+  "title": "Stream Quality Profile",
+  "type": "grafana-piechart-panel",
+  "valueName": "total"
+}
+```
+
+### Useful links
+
+- <a href="https://github.com/Boerderij/Varken">Varken Github</a>
+- <a href="https://discord.gg/VjZ6qSM">Varken Support Discord</a>
+- <a href="https://ko-fi.com/varken">Buy Varken devs a coffee</a>

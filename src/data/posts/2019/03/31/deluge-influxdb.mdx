@@ -1,0 +1,81 @@
+---
+publishDate: 2019-03-31T15:00:00-04:00
+title: "Deluge -> InfluxDB"
+excerpt: "Getting Deluge stats into InfluxDB and Grafana using a thin client and a community InfluxDB script."
+category: Grafana
+image: '~/assets/images/banners/grafana_main_banner.webp'
+tags:
+  - deluge
+  - influxdb
+  - grafana
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+So ever since I got my remote seed box setup from <a href="https://seedboxes.cc/">seedboxes.cc</a> I have been trying to figure out the best way to get Deluge stats to show up in my Grafana stack.
+
+I first tried a <a href="https://github.com/tobbez/deluge_exporter">Deluge Exporter for Prometheus</a> but it didn't seem to work as it required the config directory of Deluge in order for it to export the stats. Really dumb but it's whatever. I then came across an <a href="https://github.com/mvantassel/deluge2influx">influxdb script</a> that sent Deluge stats to Influx. However, that did not work either as apparently the /json endpoint used a self-signed certificate and the script errored because of that.
+
+BUT, I got that script to actually work though! Had to use a deluge "thin client" to connect to the remote seed box and basically mirror the data locally. This was done by running a deluge container in docker and using the connection preferences to connect to Cerberus (my remote seedbox).
+
+<Aside title="Note" type="note">
+  There used to be a screenshot of my W.I.P. Deluge Influx dashboard here but unfortunately it has been lost to time. :cry:
+</Aside>
+
+Now a quick note here, this dashboard is currently a full WIP as I learn what data is what and how to properly visualize it in Grafana.
+
+## What you will need to set this up
+
+- Docker
+- <a href="https://hub.docker.com/r/linuxserver/deluge/">Deluge or Deluge thin client</a>
+- InfluxDB obviously.
+
+First make sure you have docker installed and set up (preferably on a Linux host). Then make sure you have your deluge client set up and configured properly for hosting Linux ISO downloads, etc.
+
+First create the deluge database, user and assign the appropriate permissions. If you do not have a Grafana/Influx stack going see my guide <a href="/guides">here</a>.
+
+```shell
+curl -XPOST "http://ip.of.influx.db:8086/query" -u admin:password --data-urlencode "q=CREATE DATABASE 'deluge'"
+
+curl -XPOST "http://ip.of.influx.db:8086/query" -u admin:password --data-urlencode "q=CREATE USER deluge WITH PASSWORD 'deluge'"
+
+curl -XPOST "http://ip.of.influx.db:8086/query" -u admin:password --data-urlencode "q=GRANT WRITE ON deluge TO deluge"
+
+curl -XPOST "http://ip.of.influx.db:8086/query" -u admin:password --data-urlencode "q=GRANT READ ON deluge TO grafana"
+```
+
+Create an exporters folder inside your Influxdb directory.
+
+```shell
+# BASH [ LINUX VM ]
+mkdir /opt/containers/influxdb/exporters && mkdir /opt/containers/influxdb/exporters/deluge
+```
+
+Copy the following into a file on your docker host and then edit it to match your setup.
+
+```shell
+# BASH [ LINUX VM ]
+curl https://bin.alexsguardian.net/raw/deluge2influx -o /opt/containers/influxdb/exporters/deluge/deluge2influx-compose.yml
+```
+
+```shell
+# BASH [ LINUX VM ]
+nano /opt/containers/influxdb/exporters/deluge/deluge2influx-compose.yml
+```
+
+When you finish editing hit `CTRL+X` then `Y` to save and close the file.
+
+Now start up the container.
+
+```shell
+# BASH [ LINUX VM ]
+docker-compose -f /opt/containers/influxdb/exporters/deluge/deluge2influx-compose.yml up -d
+```
+
+Create a new dashboard in Grafana and import <a href="https://www.dropbox.com/s/bx19uzs0ttrc2cs/deluge-dashboard.json?dl=0">this .json file</a>. Note that this dashboard expects the data source in Grafana to be called "deluge".
