@@ -18,6 +18,7 @@ comments: true
 ---
 import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
+import FTCDisclaimer from '~/components/custom/FTCDisclaimer.astro'
 import { Image } from 'astro:assets'
 import gh_actions_jekyll from 'gh-actions-jekyll.webp'
 
@@ -34,7 +35,7 @@ If you want to use the actions file below you will need the following items comp
 
 * Cloned / Setup a Jekyll blog in a repository on GitHub.
 * Have a VM running that is accessible by SSH from the internet (WAN).
-    * I recommend [Linode](https://www.linode.com/?r=67f6812cc5712674183021660b122e45095f35b5) if you are just starting out.
+    * I recommend [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5) if you are just starting out.
 * Have a user account created on the VM for actions to log into via SSH.
     * You can check out my post, [here](/posts/2022/06/25/AutoGHDeployLinode/#setting-up-the-vm), which details this process.
 * Have a domain registered and pointing to the public (WAN) IP of the VM.
@@ -236,6 +237,6 @@ If you are using the Linode Cloud Firewall, check out [my post](/posts/2024/02/2
 ----
 ## Affiliate Links
 
-- [Linode](https://www.linode.com/?r=67f6812cc5712674183021660b122e45095f35b5)💜
+- [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)💜
 
-<sub>*FTC: Some links in this post are income generating.*</sub> 
+<FTCDisclaimer />

@@ -18,12 +18,13 @@ author: Alexander
 ---
 import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
+import FTCDisclaimer from '~/components/custom/FTCDisclaimer.astro'
 
-<sub class="flex mb-8 mt-8 justify-center">*FTC: Some links in this post are income earning affiliate links.*</sub>
+<FTCDisclaimer />
 
 <hr />
 
-In my ever-increasing push to lock down my Virtual Machines (VMs) in [Linode](https://www.linode.com/) (*[ref link](https://www.linode.com/?r=67f6812cc5712674183021660b122e45095f35b5) = $100 credit when you activate a payment method!*), I have started using the [Cloud Firewall](https://www.linode.com/products/cloud-firewall/) more to limit connections to them. It's basically like your local network Router's firewall but runs in the Cloud.
+In my ever-increasing push to lock down my Virtual Machines (VMs) in [Linode](https://www.linode.com/) (*[ref link](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5) = $100 credit when you activate a payment method!*), I have started using the [Cloud Firewall](https://www.linode.com/products/cloud-firewall/) more to limit connections to them. It's basically like your local network Router's firewall but runs in the Cloud.
 
 Currently, I have port 22 (SSH) limited to my home WAN IP. This makes it hard to automate the deployment of my blog from GitHub without having to manually update the rules to all ipv4 traffic on port 22 before I run my workflows. A few of them are automated to update dependencies and fail if the rules are not updated in time. I do not like failed run email spam, so I decided to finally automate it.
 

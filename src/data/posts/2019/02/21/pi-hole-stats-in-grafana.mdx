@@ -1,0 +1,210 @@
+---
+publishDate: 2019-02-21T12:00:00-05:00
+title: "Pi-Hole Stats in Grafana"
+excerpt: "Send Pi-Hole stats to InfluxDB with a Python script and build a Grafana dashboard from them."
+category: Grafana
+image: '~/assets/images/banners/grafana_main_banner.webp'
+tags:
+  - pihole
+  - influxdb
+  - grafana
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+If you do not know what <a href="https://pi-hole.net/">Pi-hole</a> is I definitely recommend you look into it. Especially if you want to block ads/telemetry on all your home network devices.
+
+Now there are probably a few ways to do this but for my dashboard I ended up <a href="https://github.com/janw/pi-hole-influx">using a script</a> to send pi-hole stats to InfluxDB. I currently have Pi-Hole running on a VM under Ubuntu Server 17.10.
+
+<Aside type="note">
+  This script can be run remotely but you will need to use the authentication method described in the repo.
+</Aside>
+
+**First we need to install python-pip. So SSH to your Pi-Hole server and run:**
+
+```shell
+sudo apt-get install python-pip -y
+```
+
+**Now create a new directory for the script to live in.**
+
+```shell
+mkdir /opt/pihole-influx
+```
+
+**Clone the pi-hole-influx repo.**
+
+```shell
+git clone https://github.com/janw/pi-hole-influx.git /opt/pihole-influx
+```
+
+**Once that finishes, cd to /pihole-influx and run:**
+
+```shell
+pip install -r requirements.txt
+```
+
+**Now clone the config.example.ini to config.ini.**
+
+```shell
+cp config.example.ini config.ini
+```
+
+**Edit the config.ini file to match your environment.**
+
+```shell
+nano config.ini
+```
+
+| | |
+|---|---|
+| **[InfluxDB]** | |
+| port | 8086 |
+| hostname | \<if.of.influx.db\> |
+| username | pihole |
+| password | pihole |
+| database | pihole |
+| **[pihole]** | |
+| api_location | address of the /admin/api.php of your pi-hole instance |
+| instance_name | hostname |
+
+<Aside type="tip">
+  You can scrape multiple pi-hole instances if you run more than 1 by adding a second config block called [pihole_2], etc. I'd recommend using a docker container if you plan to use more than one pi-hole instance.
+</Aside>
+
+**Save and close the config.ini file.**
+
+**Lastly,** you need to create the InfluxDB database that your pi-hole stats will reside in. This will need to match what you put in the `database = databasename` section in your config.ini.
+
+```shell
+curl -XPOST "http://<ip.of.influx.db>:8086/query?u=<admin user>&p=<password>" --data-urlencode "q=CREATE DATABASE "pihole""
+
+curl -i -XPOST "http://<ip.of.influx.db>:8086/query?u=<admin user>&p=<password>" --data-urlencode "q=CREATE USER "pihole" WITH PASSWORD "pihole""
+
+curl -XPOST "http://<ip.of.influx.db>:8086/query?u=<admin user>&p=<password>" --data-urlencode "q=GRANT WRITE ON "pihole" TO "pihole""
+
+curl -XPOST "http://<ip.of.influx.db>:8086/query?u=<admin user>&p=<password>" --data-urlencode "q=GRANT READ ON "pihole" TO "grafana""
+```
+
+**Now launch piholeinflux.py.**
+
+```shell
+./piholeinflux.py
+```
+
+## Running piholeinflux.py as a service.
+
+You can set up piholeinflux.py to run as a systemd service so that it will auto launch at boot time if you ever have to reboot your server.
+
+**Create the piholeinflux.service file.**
+
+```shell
+nano piholeinflux.service
+```
+
+**Paste the below info into your new .service file.**
+
+```ini
+User=pi #YOUR USERNAME
+ExecStart=/usr/bin/python /home/USERNAME/pihole-influx/piholeinflux.py
+```
+
+**Save and close the .service file. Then run the following in order:**
+
+```shell
+sudo ln -s /opt/pihole-influx/piholeinflux.service /etc/systemd/system
+sudo systemctl enable piholeinflux.service
+sudo systemctl daemon-reload
+sudo systemctl start piholeinflux.service
+```
+
+<Aside type="caution">
+  If you get an error while running, make sure you can A: communicate to InfluxDB and B: the "USER=" in the .service file is set to a user that can run it (i.e. root or you).
+</Aside>
+
+## Setting up the Grafana Dashboard
+
+### Pi-Hole Data Source
+
+1. Select the cog on the left hand side and click "data sources"
+2. Click "add data source"
+3. Click InfluxDB
+4. Enter the following information and hit "Save & Test"
+
+<Aside type="note">
+  If you get an error, double check your connection info for typos!
+</Aside>
+
+| Setting | Value |
+|---|---|
+| Name | pi-hole |
+| URL | http://\<ip-of-influx.db\>:8086 |
+| Database | pihole |
+| user | grafana |
+| password | grafana |
+
+### Dashboard Setup
+
+Now you can import a basic dashboard using the ID from the script's repo. This will give you some basic info from your Pi-Hole data source.
+
+Dashboard ID: **<a href="https://grafana.com/dashboards/6603">6603</a>**
+
+HOWEVER, there are a few issues with it. First, you will want to edit the Realtime Queries and add: `non_negative_derivative` or add `math(* -1)` to each of the queries, under "Metrics", so the Y-Axis has no negative values.
+
+## Docker Container Version
+
+You can deploy this script using the below Dockerfile and config.ini.
+
+```dockerfile
+FROM alpine as builder
+RUN apk add --no-cache git
+WORKDIR /app
+RUN git clone https://github.com/janw/pi-hole-influx.git
+
+FROM python:3-alpine
+WORKDIR /usr/src/app
+
+COPY --from=builder /app/pi-hole-influx/requirements.txt /usr/src/app
+RUN pip install --no-cache-dir -r requirements.txt
+COPY --from=builder /app/pi-hole-influx/piholeinflux.py /usr/src/app
+COPY config.ini .
+
+CMD [ "python", "./piholeinflux.py" ]
+```
+
+```ini
+[influxdb]
+
+port = 8086
+hostname = 10.9.9.120
+username = pihole
+password = allthosesweetstatistics
+database = pihole
+
+# Time between reports to InfluxDB (in seconds)
+reporting_interval = 10
+
+
+[pihole]
+api_location = http://10.9.9.120/admin/api.php
+instance_name = pihole
+timeout = 10
+```
+
+Copy both of the above blocks into the same folder.
+
+```shell
+docker build -t your-name/of-image .
+```
+
+Thanks to my co-worker for throwing together this easy, lightweight Docker container version. Also since it doesn't require a mounting volume, it should work in swarm mode!
+
+---
+
+*Edit 4/29/19: Updated to match new Grafana guide settings.*

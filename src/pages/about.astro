@@ -3,8 +3,11 @@ import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import ContentWrapper from '~/components/custom/ContentWrapper.astro';
 import Support from '~/components/widgets/Support.astro';
+import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import { footerData } from '~/navigation';
+import aiDisclosureImage from '~/assets/images/AI-P.png';
+import { isInternalLink, externalLinkRel } from '~/utils/links';
 
 const socialLinks = footerData.socialLinks.filter((link) => link.ariaLabel !== 'RSS');
 
@@ -79,7 +82,7 @@ const supportItems = [
     star: true,
     action: {
       text: 'Sign up',
-      href: 'https://www.linode.com/?r=67f6812cc5712674183021660b122e45095f35b5'
+      href: 'https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5'
     }
   },
   {
@@ -128,6 +131,38 @@ const supportItems = [
   {
     title: 'Affiliate Links',
     description: 'Clicking affliate links in my posts will earn me a small commission at no extra cost to you. I only recommend products that I use and will not recommend anything I deem to be of low quality.',
+  }
+];
+
+const disclaimerItems = [
+  {
+    title: 'Post Sponsoring',
+    icon: 'tabler:speakerphone',
+    description: 'I do offer post sponsoring for a small fee. However I do not do paid reviews. I WILL NOT accept payment to write a positive review. If you\'re interested in sponsoring a post, reach out and we can discuss details.',
+    action: {
+      text: 'Email Me',
+      href: 'mailto:blog@alexsguardian.net'
+    }
+  },
+  {
+    title: 'GA Disclaimer',
+    icon: 'tabler:chart-bar',
+    description: 'I use Google Analytics and Search Console to track site engagement and see what posts are popular. I don\'t serve ads or take part in targeted ad programs on any of my sites — analytics are only used to track site performance. A simple ad blocker will stop the script from running. :)',
+  },
+  {
+    title: 'AI & Tools Disclosure',
+    icon: 'tabler:robot',
+    description: 'I use LanguageTool for spell checking, and Claude (Anthropic) to help maintain this site\'s underlying code (not post content), as well as for grammar proofing when LanguageTool doesn\'t catch something. I follow the Responsible AI Disclosure standard linked below. All typed content is 100% written by me or un-altered responses from interviewees.',
+    image: {
+      src: aiDisclosureImage,
+      alt: 'RAID-P: AI was used to proof this work',
+      href: 'https://responsibleaidisclosure.com/'
+    }
+  },
+  {
+    title: 'Personal Opinions',
+    icon: 'tabler:message-2',
+    description: 'All opinions expressed on this blog are my own and do not reflect the views of my employer or of Alex\'s Guardian.',
   }
 ];
 
@@ -244,43 +279,43 @@ const metadata = {
   />
 
 
-  <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary dark:invisible motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
+  <hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
 
   <ContentWrapper>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-      <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700">
-        <div class="flex items-center gap-2 mb-2">
-          <Icon name="tabler:speakerphone" class="w-5 h-5 shrink-0" />
-          <h2 class="text-xl font-bold font-heading">Post Sponsoring</h2>
-        </div>
-        <p class="text-sm text-muted dark:text-slate-400">
-          I do offer post sponsoring for a small fee. However I do not do paid reviews.{' '}
-          <strong class="underline font-bold text-default dark:text-slate-300">
-            I WILL NOT accept payment to write a positive review.
-          </strong>{' '}
-          If you're interested in sponsoring a post, reach out via{' '}
-          <a
-            href="mailto:blog@alexsguardian.net"
-            class="text-primary underline inline-flex items-center gap-1"
-            title="Email Me"
-          >
-            email <Icon name="tabler:mail" class="w-4 h-4" />
-          </a>{' '}
-          and we can discuss details.
-        </p>
-      </div>
-
-      <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700">
-        <div class="flex items-center gap-2 mb-2">
-          <Icon name="tabler:chart-bar" class="w-5 h-5 shrink-0" />
-          <h2 class="text-xl font-bold font-heading">GA Disclaimer</h2>
-        </div>
-        <p class="text-sm text-muted dark:text-slate-400">
-          I use Google Analytics and Search Console to track site engagement and see what posts are popular. I don't
-          serve ads or take part in targeted ad programs on any of my sites — analytics are only used to track site
-          performance. A simple ad blocker will stop the script from running. :)
-        </p>
-      </div>
+    <h2 class="text-2xl font-bold font-heading mb-4 text-center motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      Disclaimers
+    </h2>
+    <div class="flex flex-col gap-6 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+      {
+        disclaimerItems.map(({ title, icon, description, action, image }) => (
+          <div class="p-4 rounded-lg border border-gray-200 dark:border-slate-700">
+            <div class="flex items-center gap-2 mb-2">
+              <Icon name={icon} class="w-5 h-5 shrink-0" />
+              <h3 class="text-xl font-bold font-heading">{title}</h3>
+            </div>
+            <p class="text-sm text-muted dark:text-slate-400">{description}</p>
+            {image && (
+              <div class="mt-4">
+                <a href={image.href} target="_blank" rel="noopener noreferrer">
+                  <Image src={image.src} alt={image.alt} class="max-w-[120px] w-full h-auto" />
+                </a>
+              </div>
+            )}
+            {action && (
+              <div class="mt-4">
+                <a
+                  href={action.href}
+                  target={isInternalLink(action.href) ? undefined : '_blank'}
+                  rel={isInternalLink(action.href) ? undefined : externalLinkRel(action.href)}
+                  class="inline-flex items-center justify-center px-6 py-2 text-center text-white hover:text-white bg-primary hover:bg-[--aw-color-secondary] dark:bg-primary-700 dark:hover:bg-[--aw-color-secondary] rounded-md shadow-md"
+                >
+                  {action.text}
+                </a>
+              </div>
+            )}
+          </div>
+        ))
+      }
     </div>
   </ContentWrapper>
 </Layout>

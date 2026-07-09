@@ -1,0 +1,78 @@
+---
+publishDate: 2020-01-11T01:00:48-05:00
+title: "IPMI Monitoring via Telegraf"
+excerpt: "Monitor IPMI sensor data with Telegraf and visualize it in Grafana."
+category: Grafana
+image: '~/assets/images/banners/grafana_main_banner.webp'
+tags:
+  - grafana
+  - ipmi
+  - telegraf
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+Telegraf supports IPMI inputs for monitoring via <a href="https://github.com/ipmitool/ipmitool">ipmitool</a>. Now this will only work if your server supports the Intelligent Platform Management Interface aka IPMI. To check if your server supports it you can either look up your server's documentation or take a look at the UEFI/BIOS for IPMI settings. Usually you have to enable it as it's not enabled by default.
+
+## Getting started
+
+**Note**: If you followed my guide, <a href="/guides">Grafana – Start from Scratch</a>, you should already have <a href="/guides">IPMItool installed with Telegraf in Docker</a>! If so you can skip right to the configuration section!
+
+First you will need to download and install the ipmitool. I am running this on a 2c 2GB Ubuntu server 17.10 VM along <a href="/guides">with a Telegraf install</a> with [[inputs.ipmi_sensor]] enabled.
+
+## Installing IPMItool
+
+```shell
+sudo apt-get install ipmitool -y
+```
+
+To check and see if it installed correctly you can run `ipmitool -H IP.OF.SERVER.HERE -U username -P password sensor`
+
+## Configuring the IPMI Input
+
+**<a href="/guides">Install Telegraf</a> and edit the telegraf.conf file.**
+
+```shell
+nano /etc/telegraf/telegraf.d/ipmi-input.conf
+```
+
+**Paste the following into the new file and edit the `servers` and `metric_version` sections to match your setup.**
+
+Note, you can have multiple IPMI inputs, just copy everything and paste it a second time and for how many servers you want to monitor.
+
+```toml
+[[inputs.ipmi_sensor]]
+  path = "/usr/bin/ipmitool" # This is the default install location of ipmitool
+  servers = ["USERNAME:PASSWORD@lan(IP.OF.IPMI.SERVER)"]
+  interval = "30s"
+  timeout = "20s"
+  metric_version = "SUPPORTED METRIC VERSION OF SERVER" # Usually 1 or 2
+```
+
+**Save and close ipmi-input.conf and start telegraf.**
+
+```shell
+sudo systemctl start telegraf.service
+```
+
+## Adding IPMI to Grafana
+
+Now I am going to assume you already have Telegraf reporting to Influxdb with a Influxdb Telegraf data source already added to Grafana. If not go check out the <a href="/guides">Telegraf install guide(s)</a>.
+
+Add a single stat panel to your dashboard with the following info under Metrics:
+
+**FROM** *default* ipmi_sensor **WHERE** server = IP.OF.IPMI.SERVER **AND** name = cpu1_temp **SELECT** field(value) mean() **GROUP BY** time(30s) full(null)
+
+<Aside type="tip">
+  Now the problem with IPMI is that all machines report their values differently so one server may have it as cpu_1_temp_C and another may have it as proc1_temp_C. You'll have to play with your queries to get the right values.
+</Aside>
+
+Under options set Unit to Temperature > Celsius (°C)
+
+You should now have a singlestat panel that displays current cpu temp every 30s. You can speed up the polling rate by editing the `interval = "30s"` value in telegraf.conf and changing `time(30s)` to the same value.

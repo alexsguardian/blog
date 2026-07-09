@@ -1,0 +1,80 @@
+---
+publishDate: 2019-04-29T12:12:58-04:00
+title: "50% Packet loss? What?!"
+excerpt: "A 72 hour saga of chasing down packet loss through Caddy, EdgeRouter firmware, and a mis-provisioned Comcast channel."
+category: Ramblings
+image: '~/assets/images/banners/default_banner.webp'
+tags:
+  - comcast
+  - packet-loss
+  - signal-issues
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+So if you are a frequent user of my website you may have recalled some issues with my site that started last week. Well here's the scoop on what happened.
+
+Last Wednesday [ 4/26/19 ] around 3AM I started getting reports of low bandwidth in my overview dashboard in Grafana. Note: I basically monitor everything that I can. These reports set off a massive find and fix hunt as I basically rely on my "gigabit" connection for everything.
+
+Prepare for long post.
+
+## First Issue ( Mostly unrelated )
+
+I was getting reports from a few Facebook group members that my site was throwing occasional TLS errors. So I started investigating my reverse proxy. I found out that Caddy just launched version 1.0 and my automatic docker image building failed to update my image due to a plugin issue. So I fixed that and pulled the new docker image to update my local docker container version of Caddy.
+
+Caddy 1.0 introduced a new ALPN challenge for obtaining Let's Encrypt certificates. This challenge does not work when you are behind Cloudflare with an Orange cloud as LE is unable to talk directly to your server making the request. This caused my certificates to not renew which was causing the TLS errors. I fixed this by disabling the ALPN challenge and using the older HTTP one. Also had to wait a bit because I may have accidentally hit LE's rate limit.
+
+## Second Issue
+
+I run a Ubiquiti EdgeRouter Lite-3 as my primary routing device behind my modem. I assumed my low bandwidth issue could have been caused by my router being updated to the latest firmware. So I downgraded the firmware from version 2.0.1, which was recently released, to version 1.10.9. This ended up leading into my third issue.
+
+## Third Issue
+
+I noticed that my router's CPU was spiking rather frequently so I jumped into a CLI SSH session and ran the `top -i` command on my router. I noticed the SNMP service was spiking rather frequently to 100% CPU usage. After doing some googling, I found out that SNMP can bug out when changing firmware versions. The only fix was to disable it completely and doing so returned my router's CPU usage back to normal.
+
+So far it's been 24 hours since the first low bandwidth report…
+
+## Fourth Issue
+
+At this point I'm pulling my hair out trying to figure out what's wrong with my internet. I ran a pcap on my router, a few speed tests, and a few ping tests from it and a few network devices. I also tried using a laptop + my old ER-X directly connected to my modem… and… **HOLYCRAPMONKIES** **I'm losing 20-50% of my incoming packets**. This was verified when I checked my modem's status page and saw channel ID 33 with a corrected packet rate of 2 billion on my downstream channel list. So I called my modem manufacturer to verify this was the issue. They told me that channel 33 is an internal Comcast data channel. Also helps it was labeled as `Other` and not `QAM256`.
+
+*The image shows Channel 33 labeled as "Other" with a corrected packet rate of 2,052,783,457.*
+
+<Aside title="Note" type="note">
+  Unfortunately the image of my modem's status page has been lost to time.
+</Aside>
+
+Now this was the fun part: I had to convince Comcast Script Monkeys that this was an issue on their end and not because I "owned my own equipment." So I went and called Comcast TS and got the usual Tier 1 person. Before they could even talk I asked them if they knew what channel bonding, MER/SNR, or signal power was and if they didn't I need someone that does. This is how it went: (My thoughts)
+
+### Friday Night Call
+
+Me: "Hi, before we go anywhere, do you know what channel bonding, MER/SNR, or signal power level is? If not I need someone that does."<br />
+TS: "No I do not, and there is no one here at the moment that does. (Um OK). But I can put in a T2 ticket for you after I do a few modem checks.. (FML)."<br />
+Me: "Ok well I am losing 20-50% of my incoming packets which is basically making my internet useless. It's been going on since Wednesday at 3AM. [It's now Friday night btw]<br />
+TS: "You said 20-50% sir?"<br />
+Me: "Yes.. I checked my modem and I have a channel labeled ID 33 – Other with a corrected packet rate of 2 billion. It looks like it was provisioned wrong."<br />
+TS: "Ok well I can see if I can change the channels."<br />
+…<br />
+TS: "I see you own your own modem and unfortunately we can't edit its settings. I can schedule a tech to come out… The earliest I have is Sunday."<br />
+Me: "No, every time a tech comes out, they plug in their little speed testing Raspberry Pi which has a cap of 300Mbps so they won't even be able to fully test my gigabit connection. Second, this is a signal issue and recently started happening, it's not my modem as it was confirmed by the manufacturer. I have also double checked cable connections and even the coax connection box in my apartment."<br />
+TS: "I'll schedule the tech for Sunday at 2-4PM"<br />
+Me: "ffs, fine."
+
+### Saturday Call
+
+Comcast T2 calls me:<br />
+TS: "Hi, can I speak to Mr. Henderson?"<br />
+Me: "Speaking"<br />
+TS: "Hi, this is Comcast T2 calling about your cable issue. We have identified a signal issue in your neighborhood which was resulting in poor signal performance. We have since fixed this issue and would like to know if your issue is resolved."<br />
+Me: "I am currently not home but I can verify when I am."<br />
+TS: "Ok Mr. Henderson. If your issue is fixed, let us know and we can cancel your tech visit tomorrow."
+
+Okay so maybe laying tech information onto the T1 person helped, lol. (Also, I condensed some of the Friday call since it had a lot of me being annoyed with T1 for being a script monkey. Even called them out on it lol). Anyway after the call on Saturday I RDP'd to my server via VPN+Guacamole and ran a slew of network tests. Looks like my connection was fixed finally and it's way more stable now too!
+
+**What a 72-hour ride!**

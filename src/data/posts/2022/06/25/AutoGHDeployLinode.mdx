@@ -20,7 +20,7 @@ import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
 import FTCDisclaimer from '~/components/custom/FTCDisclaimer.astro'
 
-This is part 3 of this series so if you haven't completed [part 1](/posts/2022/06/12/AutoGHActionsDocker/) and [part 2](/posts/2022/06/20/AutoGHActionsDiun/) yet, go back if you want to follow along. In this part we will be updating our Caddy pipeline to deploy updates from Actions to a VM running in [Linode](https://www.linode.com/?r=67f6812cc5712674183021660b122e45095f35b5)'s cloud. As we are using Docker to run Caddy this will be very easy. In Part 4 we will be building a binary and pushing it to the Linode VM instead, which is slightly more complicated.
+This is part 3 of this series so if you haven't completed [part 1](/posts/2022/06/12/AutoGHActionsDocker/) and [part 2](/posts/2022/06/20/AutoGHActionsDiun/) yet, go back if you want to follow along. In this part we will be updating our Caddy pipeline to deploy updates from Actions to a VM running in [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)'s cloud. As we are using Docker to run Caddy this will be very easy. In Part 4 we will be building a binary and pushing it to the Linode VM instead, which is slightly more complicated.
 
 <Aside type="note">
 Note: This is merely a guide to get started. These are the base steps to get you through the door. I'd recommend after you complete this guide that you review your security setup for your VM. As well as locking down access (disabling root login, etc). I will be covering some hardening topics later and will link them here when they are ready.
@@ -38,8 +38,8 @@ I will be running this series as if you were running on Windows 10/11 with [Visu
 
 You should have these items completed and set up before trying to follow this post.
 
-- Created a [Linode Account](https://login.linode.com/signup?promo=signup100-62122)
-  - You can use [my affiliate link](https://www.linode.com/?r=67f6812cc5712674183021660b122e45095f35b5) to open an account and get credit. <sup>It helps support the blog! :)</sup>
+- Created a [Linode Account](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)
+  - You can use [my affiliate link](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5) to open an account and get credit. <sup>It helps support the blog! :)</sup>
 - Have a [Linux VM](https://www.linode.com/docs/guides/creating-a-compute-instance/) running in Linode's Cloud with [Docker Engine installed](https://docs.docker.com/engine/install/).
   - Have [SSH Key Auth setup](https://www.linode.com/docs/guides/set-up-and-secure/#harden-ssh-access) on the VM.
   - Have a secondary SSH key pair set up.
@@ -293,7 +293,7 @@ If it starts up with no errors, terminate the container using `CTRL+C`. Then dou
 ----
 ## Affiliate Links
 
-- [Linode](https://www.linode.com/?r=67f6812cc5712674183021660b122e45095f35b5)💜
-- [Private Internet Access](https://www.privateinternetaccess.com/pages/buy-a-vpn/1218buyavpn?invite=U2FsdGVkX1-8fM3Tf_qW3eYYf6yVliXSmIZwo4nDBfM%2CYfeBrdg4n9UbF4jCvDzT83kfTKA)
+- [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)💜
+- [Private Internet Access](https://www.privateinternetaccess.com/pages/buy-a-vpn/1218buyavpn?invite=U2FsdGVkX1-pOm5kbEAhmvX-8nOFQIjNxP5AlMFdHlo%2Cn-IHMcG_0Ut99i-JHjgH_TLJ-pA)
 
 <FTCDisclaimer /> 

@@ -7,6 +7,7 @@ import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
 import Pagination from '~/components/blog/Pagination.astro';
 import BackToTop from '~/components/common/BackToTop.astro';
+import categoryDescriptions from '~/data/category-descriptions.json';
 
 export const prerender = true;
 
@@ -31,7 +32,10 @@ const metadata = {
 
 <Layout metadata={metadata} data-pagefind-ignore>
   <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl data-pagefind-ignore">
-    <Headline>Category: {category.title}</Headline>
+    <Headline>
+      Category: {category.title}
+      <Fragment slot="subtitle">{categoryDescriptions[category.title]}</Fragment>
+    </Headline>
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
     <BackToTop />

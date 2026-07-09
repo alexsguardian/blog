@@ -1,0 +1,71 @@
+---
+publishDate: 2019-02-22T14:41:33-05:00
+title: "Speedtest Data in Grafana"
+excerpt: "Feed Speedtest results into InfluxDB and graph download/upload speed over time in Grafana."
+category: Grafana
+image: '~/assets/images/banners/grafana_main_banner.webp'
+tags:
+  - speedtest
+  - influxdb
+  - grafana
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+You'll first need to create the database that the speedtest container will be writing data to. If you followed my <a href="/guides">Grafana guide</a> then you will need to use the following commands to create the database and needed permissions. Make sure to change `<>` areas with your needed info
+
+```shell
+curl -XPOST "http://<ip.of.influx.db>:8086/query" -u admin:password --data-urlencode "q=CREATE DATABASE speedtest"
+
+curl -XPOST "http://<ip.of.influx.db>:8086/query" -u admin:password --data-urlencode "q=CREATE USER speedtest WITH PASSWORD 'speedtest'"
+
+curl -XPOST "http://<ip.of.influx.db>:8086/query" -u admin:password --data-urlencode "q=GRANT WRITE ON speedtest TO 'speedtest'"
+
+curl -XPOST "http://<ip.of.influx.db>:8086/query" -u admin:password --data-urlencode "q=GRANT READ ON speedtest TO grafana"
+```
+
+Now to save a few words I am just going to link the guide for the Speedtest-for-InfluxDB-and-Grafana docker container <a href="https://github.com/barrycarey/Speedtest-for-InfluxDB-and-Grafana">here</a>. It's pretty straightforward and easy to follow, so go get the container running with your new database and then return!
+
+---
+
+Now that you have the speedtest container running in docker and sending the info to influxdb, (I recommend changing the `delay = 300` to something more infrequent so it's not testing every 5 minutes), we can set up the graph to plot the data.
+
+<Aside type="tip">
+  You can use <a href="https://www.speedtestserver.com/">this site</a> to get speedtest server IDs if you wish to specify them instead of using "Auto."
+</Aside>
+
+**Navigate to Grafana, log in, go to the add data sources view and click "add data source".**
+
+| Setting | Value |
+|---|---|
+| NAME | Speedtest Data |
+| URL | http://\<ip.of.influx.db\>:8086 |
+| USER | grafana |
+| PASSWORD | grafana |
+| DATABASE | speedtest |
+
+**Now head to your dashboard and add a new graph.** Under Metrics:
+
+```sql
+SELECT mean("download") FROM "speed_test_results" WHERE time >= now() - 30d GROUP BY time(1h) fill(linear);
+SELECT mean("upload") FROM "speed_test_results" WHERE time >= now() - 30d GROUP BY time(1h) fill(linear)
+```
+
+Axes tab:
+
+| Setting | Value |
+|---|---|
+| Left Y – Unit | bits/sec |
+| Left Y – Decimals | 1 |
+
+Edit the rest of the settings to your liking and then click the back arrow. Give it some time to update, aka allow the speed test to run, and you should see your first mark on the graph.
+
+---
+
+*Edit 4/29/19: Updated to match new Grafana guide settings.*

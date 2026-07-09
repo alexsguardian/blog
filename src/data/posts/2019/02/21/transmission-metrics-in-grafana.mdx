@@ -1,0 +1,81 @@
+---
+publishDate: 2019-02-21T13:00:00-05:00
+title: "Transmission Metrics in Grafana"
+excerpt: "Export Transmission stats to Prometheus and graph them in Grafana."
+category: Grafana
+image: '~/assets/images/banners/grafana_main_banner.webp'
+tags:
+  - transmission
+  - prometheus
+  - grafana
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+If you use <a href="https://transmissionbt.com/">Transmission</a> as your download client, you can use a metrics exporter for Prometheus to ingest info into Grafana to display. You'll also want to make sure Prometheus is set up and running or else this won't work!
+
+SSH to your docker host that is running Prometheus and edit the `prometheus.yml` configuration file by adding the following:
+
+```shell
+scrape_configs:
+  - job_name: 'transmission'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['<ip.of.transmission.exporter>:19091']
+```
+
+Save and close `prometheus.yml`. Now create the Transmission-Exporter.
+
+```shell
+docker run -d -p 19091:19091 -e TRANSMISSION_ADDR=http://<ip.of.transmission.client>:<port> metalmatze/transmission-exporter
+```
+
+You'll need to change `ipoftransmission:<port>` to the ip:port of your Transmission install. If you have authentication enabled you'll need to specify `-e TRANSMISSION_USERNAME=username` and `-e TRANSMISSION_PASSWORD=password` to the above command before `metalmatze/transmission-exporter`. Restart your Prometheus container so it picks up the new config. You should be able to navigate to the Prometheus web ui now and run the following query:
+
+```shell
+transmission_session_stats_downloaded_bytes{type="cumulative"}
+```
+
+You should see something similar to:
+
+<Aside title="Note" type="note">
+  There used to be a screenshot of the Prometheus query result here but unfortunately it has been lost to time. :cry:
+</Aside>
+
+Now open Grafana and under Data Sources add a new Prometheus source:
+
+| Setting | Value |
+|---|---|
+| Name | Prometheus |
+| URL | http://ip-of-prometheus:9090 |
+| HTTP Method | GET |
+
+Click `Save & Test`. If you get an error, make sure Grafana can reach Prometheus.
+
+#### Adding Transmission Stats to your Dashboard
+
+Navigate to a Dashboard you wish to add Transmission stats to and add a new singlestat panel. Under Metrics, add the following query:
+
+```shell
+transmission_session_stats_downloaded_bytes{type="cumulative"}
+```
+
+And then under the Options tab select "Average" for Stat and "data(metric)/bytes" under Unit.
+
+<Aside type="tip">
+  If you want to see all of the metrics that are exported, you can navigate to http://ip-of-transmission-exporter:19091/metrics. It will display all exported metrics and their current values they would return. You can also see them by typing "transmission" into the query box under the Prometheus web ui.
+</Aside>
+
+#### Useful links:
+
+- <a href="https://github.com/metalmatze/transmission-exporter">Github of Transmission-Exporter</a>
+
+---
+
+*Edit 4/29/19: Updated to match new Grafana guide settings.*

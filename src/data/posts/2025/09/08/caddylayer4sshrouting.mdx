@@ -24,7 +24,7 @@ import img1 from './caddy-l4-diagram.webp';
 
 <SkipAnchor anchor="#building-caddy-for-layer-4-routing" />
 
-I’ve been running a <a href="/posts/2024/06/03/upgradingforgejo/" target="_blank">Forgejo</a> instance in my lab for a while. Until recently all my git work used HTTPS, which was fine especially on personal machines. But work recently moved me to an M4 MacBook Air, and I didn’t want to set up a credential store on it for personal repos. Since I travel occasionally and prefer carrying just one laptop, switching my homelab workflow to SSH made more sense.
+I’ve been running a <a href="/posts/2024/06/03/upgradingforgejo/">Forgejo</a> instance in my lab for a while. Until recently all my git work used HTTPS, which was fine especially on personal machines. But work recently moved me to an M4 MacBook Air, and I didn’t want to set up a credential store on it for personal repos. Since I travel occasionally and prefer carrying just one laptop, switching my homelab workflow to SSH made more sense.
 
 Normally it’s trivial: enable SSH in Forgejo, forward a port, and use it in the clone URL if it isn’t 22. For me though, I did not want to open another port on the firewall for this to work remotely. Especially since the default SSH port (`22`) is constantly scanned on the internet. If you don't know what Shodan is, <a href="https://www.shodan.io/">let me enlighten you</a>. I figured I'd try and mimic what GitHub does and allow SSH and HTTPS to live on the same port (`443`). They allow it to get around firewall blocks on port 22 ssh connections. For me at home that's not much of a problem but, it's far less predictable if I'm traveling and not on a VPN.
 
