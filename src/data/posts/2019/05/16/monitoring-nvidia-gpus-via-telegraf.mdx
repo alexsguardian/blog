@@ -1,0 +1,83 @@
+---
+publishDate: 2019-05-16T12:38:08-04:00
+title: "Monitoring Nvidia GPUs via Telegraf"
+excerpt: "Use the nvidia-smi Telegraf plugin to pull GPU stats into Grafana."
+category: Grafana
+image: '~/assets/images/banners/grafana_main_banner.webp'
+tags:
+  - nvidia-smi
+  - telegraf-nvidia
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+import gpuDashboard from './grafana-gpu.webp';
+import gpuStats from './grafana-gpu-stats.webp';
+
+The <a href="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/nvidia_smi">nvidia-smi</a> plugin for Telegraf basically gives you an overview of your GPU usage in the most current iteration in v1.10.4. This "guide" assumes you are using Windows as your host OS. Linux should be fairly easy to get going as long as you know where your nvidia-smi executable is located.
+
+If you do not have Telegraf installed, check out my guides <a href="/guides">here</a>.
+
+**Create a new conf file in telegraf.d folder.**
+
+```shell
+notepad.exe C:\telegraf\telegraf.d\nvidiasmi.conf
+```
+
+**Paste the following into the new file and save/close it.**
+
+```toml
+# Pulls statistics from nvidia GPUs attached to the host
+[[inputs.nvidia_smi]]
+  ## Optional: path to nvidia-smi binary, defaults to $PATH via exec.LookPath
+  bin_path = "C:\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe"
+
+  ## Optional: timeout for GPU polling
+  timeout = "5s"
+```
+
+**Restart Telegraf**.
+
+```shell
+net stop telegraf
+net start telegraf
+```
+
+<Aside type="note">
+  With Windows you have to use an escape \ when setting the bin_path, otherwise you'll get errors when Telegraf queries nvidia-smi.exe.
+</Aside>
+
+Once you have verified Telegraf is reporting Nvidia stats, you can start creating your panels in Grafana. Use `nvidia-smi` from your telegraf data source to build the panels.
+
+<Image src={gpuDashboard} alt="Grafana panels showing GPU usage stats from the nvidia-smi Telegraf plugin" class="rounded-lg shadow-lg flex mx-auto" />
+
+## Update February 2020
+
+Telegraf recently updated its SMI plugin to include more data retrieval. This new data can be used to create more monitoring panels. Here is a list of the most recent fields that are now returned:
+
+- clocks_current_graphics
+- clocks_current_memory
+- clocks_current_sm
+- clocks_current_video
+- encoder_stats_average_fps
+- encoder_stats_average_latency
+- encoder_stats_session_count
+- fan_speed
+- memory_free
+- memory_total
+- memory_used
+- pcie_link_gen_current
+- pcie_link_width_current
+- power_draw
+- temperature_gpu
+- utilization_gpu
+- utilization_memory
+
+<Image src={gpuStats} alt="Grafana panels showing the new encoder fps and session count stats" class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc>Here you can see the new encoder fps and session counts. These are utilizing the new stat panel in Grafana 6.6.</ImgDesc>

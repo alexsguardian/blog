@@ -1,0 +1,29 @@
+---
+publishDate: 2019-06-14T11:06:21-04:00
+title: "Expanding Pi-Hole Stats with Prometheus"
+excerpt: "A Prometheus exporter for Pi-Hole gives you a much more detailed Grafana dashboard than the old InfluxDB script."
+category: Grafana
+image: '~/assets/images/banners/grafana_main_banner.webp'
+tags:
+  - grafana
+  - pi-hole
+  - prometheus-exporter
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+import piholePrometheus from './pihole-prometheus.webp';
+
+The other day I came across a <a href="https://github.com/eko/pihole-exporter">Prometheus Exporter for Pi-hole</a> (found in a comment on /r/pihole) that gives WAY more stats/data compared to the <a href="/posts/2019/02/21/pi-hole-stats-in-grafana">InfluxDB script</a> I posted about a while back. With this exporter, I was able to set up a more detailed dashboard.
+
+<Image src={piholePrometheus} alt="Pi-Hole stats dashboard in Grafana using the Prometheus exporter" class="rounded-lg shadow-lg flex mx-auto" />
+
+Now currently I only have this setup for a single instance of Pi-Hole. I am currently in the process of setting up a second instance as a backup when my primary one goes down for updates. This dashboard can be easily updated to have either a clone of this info for your second instance or a drop down selector for instances. You'll have to update your queries to <a href="https://grafana.com/docs/reference/templating/">support dashboard variables</a>, which isn't very hard to do.
+
+The dashboard JSON can be found <a href="https://raw.githubusercontent.com/eko/pihole-exporter/master/grafana/dashboard.json">here</a>.

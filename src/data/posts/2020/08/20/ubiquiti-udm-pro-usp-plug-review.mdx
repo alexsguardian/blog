@@ -1,0 +1,108 @@
+---
+publishDate: 2020-08-20T13:00:00-04:00
+title: "Ubiquiti UDM-Pro & USP-Plug Review"
+excerpt: "A detailed review of the Ubiquiti UDM-Pro and USP-Plug, exploring their features and performance."
+category: Development
+tags:
+  - ubiquiti
+  - udm-pro
+  - usp-plug
+  - review
+  - unifi
+author: Alexander
+image: '~/assets/images/banners/review-banner.webp'
+comments: false
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+import networkDiagram from './udmp-review-network.webp';
+import udmpSetupDesk from './udmp-review-desk.webp';
+import udmpSpecs from './udmp-review-specs.webp';
+import udmpDNSfiltering from './udmp-review-dnsfilter.webp';
+import udmpNewNetworkDiagram from './udmp-review-newNet.webp';
+import udmpUSPPlug from './udmp-review-usp.webp';
+import udmpUSPcfg from './udmp-review-uspCFG.webp';
+
+<Aside type="note">
+  Neither of these devices were sent to me for a review. I paid MSRP for both the Unifi Dream Machine Pro and USP-Plug.
+</Aside>
+
+<Aside type="note">
+  Once the 1.8.2 beta firmware goes stable. I will be creating a follow up review since when I reviewed the UDMP originally it was on an early firmware version that had issues.
+</Aside>
+
+First lets set the tone. My original network setup was as follows:
+
+<Image src={networkDiagram} alt="Original Network Diagram" class="rounded-lg shadow-lg flex mx-auto" />
+
+This setup worked OK for a while but not too long ago I decided I wanted to upgrade my internal network to 10Gbe for a few devices. And thus starts the rabbit hole.
+
+<hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
+
+## Unifi Dream Machine Pro
+
+The <a href="https://store.ui.com/collections/unifi-network-routing-switching/products/udm-pro">Ubiquiti Unifi Dream Machine Pro [UDM-P]</a> (MSRP $379) out of the box looks like a monster of a router/firewall. Something you’d definitely see in a network closet at a decently sized medium business… Maybe…
+
+My UDM-P is hardware Rev. 5, aka, the general release hardware rev after it left Ubiquiti’s early access program. The firmware is currently on 1.6.6 and the Unifi controller is 5.12.67.0. However, my firmware was older when I first set it up.
+
+Setting it up was an easy process. I used my android phone with the Unifi mobile app to set it up over Bluetooth. During the setup process you are required to connect the UDM-P to the internet and use a Ubiquiti account. There is no option to set it up offline before hand. This can be frustrating for some who wish to set it up offline to test with before dropping it into production.
+
+The UDM-P is able to do IPS/IDS/DPI at around 3.5Gbps of throughput, far exceeding their other offers in the Unifi line (USG3, USG-Pro). It also hosts the Unifi controller on device as a packaged container along with Unifi Protect, Access, and Talk. On the front it has an 8 port gigabit switch, a 3.5″ HDD bay for Protect storage, 2x 10Gb SFP+ ports (one dedicated to WAN), 1x gigabit WAN port and the new LCM LCD touch display. On the back you have your standard AC power socket as well as the new Unifi RPS DC socket for battery backup.
+
+<Image src={udmpSetupDesk} alt="This picture was taken during the setup of my UDM-P at home before it went into the rack. You can clearly see all the frontal features, including the LCM display." class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc>This picture was taken during the setup of my UDM-P at home before it went into the rack. You can clearly see all the frontal features, including the LCM display.</ImgDesc>
+
+From the specs, this device looks awesome. However, its kind of been a rocky road since I got it. My first issue with the UDM-P was after I got it all setup and working. I got an alert that the UDM-P missed a heartbeat (Unifi’s controller ping back) and it was now offline. While its offline you can’t update settings to it as the controller is unable to communicate with the device. After rebooting it and getting the same thing again after 5 or so minutes, I jumped onto the Ubiquiti community discord. Found out the service that runs the heartbeat also checks IPS endpoints for updates. One of the endpoints had an SSL issue causing it to go down. So when the endpoint went down, the service hung and caused heartbeats to missed. Uh, hey QA? This was later fixed in a firmware patch.
+
+My second issue with the UDM-P is that NO WHERE in the specs list did it mention that the 8 port gigabit switch only had a 1Gbps switching capacity. Most reputable switches that are 8 port typically have an 8Gbps switching capacity. But on this switch, you only have 1Gbps of throughput switching capacity. So if you use two devices pushing 1Gbps of data you’ll start to notice latency as the switch can’t process the 2Gbps of data. Don’t use this as your primary connection to the device for your network! This should probably only be used for 10/100 connections to device management ports.
+
+<Image src={udmpSpecs} alt="UDMP Specs from Unifi's store from 4/30/2020" class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc>The above image shows the listed product specifications from Ubiqiuiti’s site for the UDM-P. Taken 4/30/2020.</ImgDesc>
+
+## Other Dream Machine Pro Annoyances:
+
+- No S/D NAT settings.
+-  No mDNS repeater (just a toggle switch for enabling the reflector).
+-  SFP+ WAN port was failover only before 1.6.6 firmware.
+-  gateway.config.json does not exist on the UDM-P.
+-  DNS filtering is Alpha and has no settings besides selecting the type of filtering content.
+
+<Image src={udmpDNSfiltering} alt="Image showing the configuration page for DNS filtering" class="rounded-lg shadow-lg flex mx-auto" />
+
+- SFP+ ports can’t be set to 1G (Fixed in 1.6.6 but still shouldn’t have been an issue for launch).
+- Wireless devices show up as wired in UDM-P’s onboard controller.
+- Advanced VPN server only supports L2TP.
+- VPN Connections only supports Unifi to Unifi.
+- No IGMP-Proxy.
+- Zero ability to adopt into an external controller or have multiple onboard sites.
+- SFP+ speed issues (apparently only affects some UDM-Ps).
+- SFP+ lockup (fixed in the 1.6.7 firmware patch supposedly).
+- <a href="https://community.ui.com/questions/UDM-Features-missing-from-UDM-and-or-controller/faa5646e-476b-41ae-8c3b-4ef418e88028">And more</a>
+
+Other than how nice it looks in the rack all hooked up, I believe it’s still a beta device and not ready for production. Especially with some of the listed issues above. Almost feels like it was rushed to General Availability. If it existed I would have gone for an updated EdgeRouter with 10G SFP+ and better internal specs over a UDM-P.
+
+## New Network Setup
+
+<Image src={udmpNewNetworkDiagram} alt="This is what the core of my network looks like now with the UDM-P installed and utilizing the 10G SFP+ LAN port." class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc>This is what the core of my network looks like now with the UDM-P installed and utilizing the 10G SFP+ LAN port.</ImgDesc>
+
+## USP-Plug Accessory
+
+The <a href="https://store.ui.com/collections/unifi-network-accessories/products/unifi-usp-plug">USP-Plug</a> (MSRP $19.99) is a smart plug designed to reboot your ONT/Modem if the Unifi Dream Machine/Unifi Dream Machine Pro detects an issue via WAN. This in theory is a good idea, however the execution is meh. The controller will keep sending a reboot command if the modem takes too long to start up. In my case, my Arris SB8200 takes roughly 1-3 minutes to fully reboot and require signal. In this time the plug will have power cycled my modem 5-6 times before I have to forcefully stop the auto reboots via the controller. Other than this ability, the plug really has no other uses. It also shows up as an AP in the Unifi controller, for some reason. Hopefully future firmware patches give it more abilities/fix the timeouts being too low. For ~$20 MSRP it’s a nice little add-on if you have a UDM/UDM-P.
+
+<Image src={udmpUSPPlug} alt="Image showing the USP-Plug accessory in Unifi Network" class="rounded-lg shadow-lg flex mx-auto" />
+
+The picture to the left here just shows the settings for the plug. Basically it’s just a toggle switch with no ability to edit the timeout settings.
+
+So for right now I do not recommend the USP-Plug. If you need to have your ONT/Modem rebooted during a network outage it might be better to setup a custom script that can reboot a smart outlet via Home Assistant. At least until Ubiquiti gives us the option to specify a timeout for the USP-Plug.
+
+<Image src={udmpUSPcfg} alt="Image showing the USP-Plug configuration settings in Unifi Network" class="rounded-lg shadow-lg flex mx-auto" />
+
+## Closing Thoughts
+
+I believe the Unifi Dream Machine Pro could be a great device once the firmware catches up to it and more features are added to the controller. It definitely has its place in the market for single site owners that do not need multi-site controllers. However, for right now I’d probably wait and see if UI updates the USG line especially if you do need the multi-site functionality and don’t want a single point of failure if you plan on running Access, Talk, Network, etc controllers.

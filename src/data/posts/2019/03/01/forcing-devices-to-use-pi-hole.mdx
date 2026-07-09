@@ -1,0 +1,85 @@
+---
+publishDate: 2019-03-01T15:32:51-05:00
+title: "Forcing devices to use Pi-Hole"
+excerpt: "Use NAT rewrite rules on your EdgeRouter to force devices with hard coded DNS servers through Pi-Hole."
+category: Homelab
+image: '~/assets/images/banners/default_banner.webp'
+tags:
+  - edgeos
+  - edgerouter
+  - pi-hole
+  - ubiquiti
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+So currently I have a few "smart home" devices and a few of them have hard coded DNS servers they use for DNS queries. Most notably my Google devices…
+
+So I went ahead and set up two NAT rewrite rules on my ER-Lite that forced all devices to go through my Pi-Hole DNS server. If you don't know what Pi-Hole is, I recommend <a href="https://pi-hole.net/">checking it out</a>. The rules make the devices think they are talking to their hard coded DNS servers. Though in reality they are actually talking to my Pi-Hole server.
+
+To set up your own rewrite rules you can do so by running these configuration commands from your ER's CLI interface. Make sure to swap out **`IP.OF.PIHOLE.SERVER`** with the IP of your Pi-Hole server, **`ETH-INTERFACE-HERE`** with your ethernet interface you wish to set the rule to, and **`YOUR.SUBNET-RANGE.HERE`** to your subnet range (ie 10.9.9.2-10.9.9.254).
+
+```shell
+configure
+set service nat rule 1 description 'Pi-Hole DNS'
+set service nat rule 1 destination address '!IP.OF.PIHOLE.SERVER'
+set service nat rule 1 destination port 53
+set service nat rule 1 inbound-interface ETH-INTERFACE-HERE
+set service nat rule 1 inside-address address IP.OF.PIHOLE.SERVER
+set service nat rule 1 inside-address port 53
+set service nat rule 1 log enable
+set service nat rule 1 protocol tcp_udp
+set service nat rule 1 source address '!IP.OF.PIHOLE.SERVER'
+set service nat rule 1 type destination
+set service nat rule 5011 description 'Masquerade Pi-Hole DNS'
+set service nat rule 5011 destination address IP.OF.PIHOLE.SERVER
+set service nat rule 5011 destination port 53
+set service nat rule 5011 log disable
+set service nat rule 5011 outbound-interface ETH-INTERFACE-HERE
+set service nat rule 5011 protocol tcp_udp
+set service nat rule 5011 source address YOUR.SUBNET-RANGE.HERE
+set service nat rule 5011 type masquerade
+commit
+save
+exit
+```
+
+You can then verify if they are enabled by running:
+
+```shell
+show nat rules
+```
+
+```shell
+Alexander@OVERWATCH:~$ show nat rules
+Type Codes:  SRC - source, DST - destination, MASQ - masquerade
+              X at the front of rule implies rule is excluded
+rule   type  intf     translation
+----   ----  ----     -----------
+2      DST   eth1     daddr !10.9.9.116 to 10.9.9.116
+    proto-tcp_udp     dport 53 to 53
+                      when saddr !10.9.9.116, sport ANY
+3      DST   eth2.3   daddr ANY to 9.9.9.9
+    proto-tcp_udp     dport 53 to 53
+5010   MASQ  eth0     saddr ANY to xxx.xxx.xxx.xxx
+    proto-all         sport ANY
+5012   MASQ  eth1     saddr 10.9.9.2-10.9.9.254 to 10.9.9.1
+    proto-tcp_udp     sport ANY
+                      when daddr 10.9.9.116, dport 53
+```
+
+Your devices should now hit your Pi-Hole DNS server rather than the one they were hard coded with.
+
+Goodbye hard coded DNS servers! :)
+
+<Aside type="note">
+  PS: A friend from work actually helped me fix this as originally I only had a destination NAT rule set which made it seem like it was working, but it actually wasn't.
+</Aside>
+
+Want to get Pi-Hole stats in Grafana? Check out <a href="/posts/2019/06/14/expanding-pi-hole-stats-with-prometheus">my post here</a>!

@@ -1,0 +1,141 @@
+---
+publishDate: 2019-05-03T15:45:01-04:00
+title: "Monitoring Hyper-V via Telegraf"
+excerpt: "Monitor Hyper-V performance counters with Telegraf and visualize them in Grafana."
+category: Grafana
+image: '~/assets/images/banners/grafana_main_banner.webp'
+tags:
+  - grafana
+  - hyper-v
+  - microsoft
+  - telegraf
+author: Alexander
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+Now the cool thing about Telegraf on Windows is that you can basically monitor any system service that reports to the Windows performance counters. So creating a Hyper-V dashboard is actually fairly easy.
+
+Create a new input configuration file in the `telegraf.d` directory:
+
+```cmd
+notepad C:\telegraf\telegraf.d\hyperv.conf
+```
+
+Paste the following into your new file, then save.
+
+```toml
+[[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V Virtual Machine Health Summary"
+    Instances = ["------"]
+    Measurement = "hyperv_health"
+    Counters = [
+      "Health Ok",
+      "Health Critical",
+    ]
+
+    [[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V Hypervisor"
+    Instances = ["------"]
+    Measurement = "hyperv_hypervisor"
+    Counters = [
+      "Logical Processors",
+      "Partitions",
+    ]
+
+    [[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V Hypervisor Virtual Processor"
+    Instances = ["*"]
+    Measurement = "hyperv_processor"
+    Counters = [
+      "% Guest Run Time",
+      "% Hypervisor Run Time",
+      "% Idle Time",
+      "% Total Run Time",
+    ]
+
+    [[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V Dynamic Memory VM"
+    Instances = ["*"]
+    Measurement = "hyperv_dynamic_memory"
+    Counters = [
+      "Current Pressure",
+      "Guest Visible Physical Memory",
+    ]
+
+    [[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V VM Vid Partition"
+    Instances = ["*"]
+    Measurement = "hyperv_vid"
+    Counters = [
+      "Physical Pages Allocated",
+    ]
+
+    [[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V Virtual Switch"
+    Instances = ["*"]
+    Measurement = "hyperv_vswitch"
+    Counters = [
+      "Bytes Received/Sec",
+      "Bytes Sent/Sec",
+      "Packets Received/Sec",
+      "Packets Sent/Sec",
+    ]
+
+    [[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V Virtual Network Adapter"
+    Instances = ["*"]
+    Measurement = "hyperv_vmnet"
+    Counters = [
+      "Bytes Received/Sec",
+      "Bytes Sent/Sec",
+      "Packets Received/Sec",
+      "Packets Sent/Sec",
+    ]
+
+    [[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V Virtual IDE Controller"
+    Instances = ["*"]
+    Measurement = "hyperv_vmdisk"
+    Counters = [
+      "Read Bytes/Sec",
+      "Write Bytes/Sec",
+      "Read Sectors/Sec",
+      "Write Sectors/Sec",
+    ]
+
+    [[inputs.win_perf_counters.object]]
+    ObjectName = "Hyper-V Virtual Storage Device"
+    Instances = ["*"]
+    Measurement = "hyperv_storage"
+    Counters = [
+      "Write Operations/Sec",
+      "Read Operations/Sec",
+      "Read Bytes/Sec",
+      "Write Bytes/Sec",
+      "Latency",
+      "Throughput",
+    ]
+```
+
+Restart Telegraf with the new config file.
+
+```cmd
+net stop telegraf
+net start telegraf
+```
+
+Import dashboard ID: `2618` into Grafana and set your data source to telegraf.
+
+<Aside type="note">
+  To see all Hyper-V counters you can check out this PowerShell counters export, <a href="https://bin.alexsguardian.net/raw/hyperv-counters-all">here</a>.
+</Aside>
+
+## Grafana Guide
+
+Check out my <a href="/guides">Grafana Guide</a> if you are new to Grafana and want to get up and going!

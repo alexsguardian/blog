@@ -32,8 +32,58 @@
       "permanent": true
     },
     {
+      "source": "/2019/02/21/pi-hole-stats-in-grafana",
+      "destination": "/posts/2019/02/21/pi-hole-stats-in-grafana",
+      "permanent": true
+    },
+    {
+      "source": "/2019/02/22/ipmi-monitoring-via-telegraf",
+      "destination": "/posts/2020/01/11/ipmi-monitoring-via-telegraf",
+      "permanent": true
+    },
+    {
+      "source": "/2019/02/22/speedtest-data-in-grafana",
+      "destination": "/posts/2019/02/22/speedtest-data-in-grafana",
+      "permanent": true
+    },
+    {
+      "source": "/2019/03/01/forcing-devices-to-use-pi-hole",
+      "destination": "/posts/2019/03/01/forcing-devices-to-use-pi-hole",
+      "permanent": true
+    },
+    {
+      "source": "/2019/04/29/50-packet-loss-what",
+      "destination": "/posts/2019/04/29/50-packet-loss-what",
+      "permanent": true
+    },
+    {
+      "source": "/2019/05/03/monitoring-hyper-v-via-telegraf",
+      "destination": "/posts/2019/05/03/monitoring-hyper-v-via-telegraf",
+      "permanent": true
+    },
+    {
+      "source": "/2019/05/16/monitoring-nvidia-gpus-via-telegraf",
+      "destination": "/posts/2019/05/16/monitoring-nvidia-gpus-via-telegraf",
+      "permanent": true
+    },
+    {
+      "source": "/2019/06/14/expanding-pi-hole-stats-with-prometheus",
+      "destination": "/posts/2019/06/14/expanding-pi-hole-stats-with-prometheus",
+      "permanent": true
+    },
+    {
+      "source": "/2019/07/11/site-migration",
+      "destination": "/posts/2019/07/11/site-migration",
+      "permanent": true
+    },
+    {
+      "source": "/2019/11/15/automated-docker-container-building-in-jenkins",
+      "destination": "/posts/2019/11/15/automated-docker-container-building-in-jenkins",
+      "permanent": true
+    },
+    {
       "source": "/2020/04/30/ubiquiti-udm-pro-usp-plug-review",
-      "destination": "/",
+      "destination": "/posts/2020/08/20/ubiquiti-udm-pro-usp-plug-review",
       "permanent": true
     },
     {

@@ -1,0 +1,58 @@
+---
+publishDate: 2020-08-17T13:00:00-04:00
+title: "Introducing PlexWatchDog"
+excerpt: "If you have a Plex server running on Windows, PlexWatchDog can help you monitor and manage it."
+category: Development
+tags:
+  - plex
+  - watchdog
+  - powershell
+  - script
+author: Alexander
+image: '~/assets/images/banners/default_banner.webp'
+comments: false
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+<Aside title="Deprecation Notice" type="danger">
+  This script is no longer being maintained. It is being kept here for historical purposes only. For this reason, comments have been disabled for the post.
+</Aside>
+
+<hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
+
+Got <a href="https://plex.tv/">Plex</a> running on a Windows machine? Need a script to watch the process and make sure it stays running? Well.. Me too! So I created the PlexWatchDog script! It is 100% written in PowerShell and is completely self-contained.. e.g. No modules needed besides PowerShell.
+
+The script currently does the following:
+
+- Monitors Plex locally via the local web interface.
+- Monitors via the Remote interface if specified in the config.json file.
+- Can log to a Cachet status page, Discord via webhooks, and a log file.
+- It also checks for the Update service and sends out an alert that the server is updating.
+- User messages for Discord are editable via the included text files.
+
+To do yet:
+
+- Make the script handle more errors.
+- Implement thumbnails for Discord webhook embeds.
+- Code clean up with proper comments and help info.
+- Export logging functions to their own scripts so that they can be independently updated without bloating the main script.
+- Have the script create a log file on error in case user did not define a logging endpoint or is running the script headless.
+- Turn the script into a full on Windows Service so that it can be remotely managed via Windows Admin Center.
+
+Head on over to the Git repo and <a href="https://github.com/alexandzors/PlexWatchDog">check out PlexWatchDog</a>! Just note that PlexWatchDog is currently in a W.I.P. state. So it may not fully work yet. Pull requests, suggestions, etc. are definitely welcome though!
+
+<hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
+
+## Other Content
+
+While you are here, check out my other posts!
+
+- <a href="/posts/2022/06/20/AutoGHActionsDiun">GitHub Actions - Automating your Docker Builds with Diun</a>
+- <a href="/posts/2022/06/12/AutoGHActionsDocker">GitHub Actions - Automatically Build Docker Containers</a>
+
+Want to run your own Grafana dashboard? Click here for my <a href="/guides">guide</a> series!

@@ -1,0 +1,33 @@
+---
+publishDate: 2019-07-11T15:42:34-04:00
+title: "Site Migration"
+excerpt: "Update on the migration of the site to a new platform and recent downtime."
+category: Updates
+author: Alexander
+image: '~/assets/images/banners/default_banner.webp'
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+import portainer from './site-migration-portainer.webp';
+
+You may have noticed that both my site [<a href="https://alexsguardian.net">alexsguardian.net</a>] and the <a href="https://g-ee.alexsguardian.net">Grafana – Experts Exchange wiki</a> going down a lot recently. Here is why:
+
+**TL/DR: Migrated both sites from my home hosted web server to a dedicated host.**
+
+I logged into Cloudflare's dashboard the other day to update a DNS record as I was testing a new self-hosted service at home. I normally don't pay much attention to the stats page but I noticed something, a bit crazy. Apparently my "site" had over 373k requests in 30 days, which at that point, it was apparent that I was running a web server. Pretty sure that's a breach of contract with my ISP as I am on a residential gigabit line and not a business connection.
+
+*Note: I have not received any type of warning from my ISP about this, yet.*
+
+I decided to take preemptive action and migrate both sites to a dedicated <a href="https://linode.com">Linode</a> VM. This freed up my bandwidth at home as well as giving me access to a proper dedicated cloud host with automated backups. Both sites are now happily running on this host with no issues so far.
+
+<Image src={portainer} alt="Linode VM Portainer view" class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc>Linode VM Portainer view</ImgDesc>
+
+*I only had to restore a backup once during the migration after I messed up the iptables firewall. The backup file wasn't saved correctly so I couldn't restore the original rules.*
+

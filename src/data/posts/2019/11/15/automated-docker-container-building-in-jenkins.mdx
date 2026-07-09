@@ -1,0 +1,132 @@
+---
+publishDate: 2019-11-15T13:25:29-05:00
+title: "Automated Docker Container Building in Jenkins"
+excerpt: "Learn how to automate Docker container builds using Jenkins."
+category: Development
+tags:
+  - jenkins
+  - docker
+  - caddy
+author: Alexander
+image: '~/assets/images/banners/default_banner.webp'
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+import jenkins from './jenkins.webp';
+
+<Image src={jenkins} alt="A picture of the Jenkins dashboard that shows a list of projects" class="rounded-lg shadow-lg flex mx-auto" />
+
+## The Problem:
+
+I want to deploy my custom image of <a href="https://github.com/alexandzors/caddy">Caddy Server</a> in docker but also keep it up-to-date with upstream changes in the <a href="https://github.com/abiosoft/caddy-docker">abiosoft/caddy-docker</a> repository.
+
+## The Solution:
+
+Use Jenkins to watch the abiosoft/caddy-docker repository and build my image based on commits/merges to the `master` branch.
+
+## And Thus Our Journey Begins…
+
+When I first started looking into doing this, I ended up using docker hub + a cloned repo of abiosoft/caddy-docker + build hooks. However this was super tedious to keep up-to-date so I went looking for another option. I ended up settling on Jenkins as it had the ability to do exactly what I wanted.
+
+### Deploying Jenkins
+
+First I had to get Jenkins up and running. I decided to deploy Jenkins as a docker container on my main docker system as it would make it easier to maintain via `docker-compose`.
+
+<Aside type="tip">
+  Using docker containers allows you to separate application dependency bloat from your host OS as each container contains all of the necessary services/packages for your desired application. It also gives you 'finer' control over application security.
+</Aside>
+
+```shell
+docker run --name=jenkins -p 8080:8080 -p 50000:50000 -v /var/run/docker.sock:/var/run/docker.sock -v jenkins:/var/jenkins_home/ -e TZ=America/New_York jenkins/jenkins
+```
+
+After the image downloads and the container is running we can access the Jenkins UI via `http://hostname:8080` and run through the setup process wizard. Once Jenkins is set up and configured with what we want, we will need to install Docker into the Jenkins container so we can build docker images. To do this we need to enter the Jenkins container CLI.
+
+```shell
+docker exec -it jenkins bin/bash
+```
+
+Then install Docker via apt-get.
+
+```shell
+apt-get update && \
+    apt-get -y install apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey && \
+    add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+    $(lsb_release -cs) \
+    stable" && \
+    apt-get update && \
+    apt-get -y install docker-ce
+```
+
+After Docker is installed you can exit the CLI and open the Jenkins web UI. Once the dashboard loads navigate to the plugin install page (Manage Jenkins > Manage Plugins) and click on the available tab. In the filter bar search/install the following plugins:
+
+- Docker Plugin
+- CloudBees Docker Build and Publish plugin
+- Git
+
+After you install these plugins you will need to restart Jenkins if you did not have it auto restart via the plugin installation step.
+
+## Setting Up the Build Job.
+
+First we need to add our Git account as a Jenkins credential. This can be done via `http://jenkins:8080/credentials/store/system/domain/_/newCredentials`. For my purposes I just left the git credential as a globally accessed one since I am the only one using this instance of Jenkins. If you have 2FA enabled on your account you will need to use a Personal Access Token or <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line">PAT</a>. If you plan to upload this image to docker hub you will need to create another credential for docker hub for it as well.
+
+Now that we have our credential(s) set up we can go about getting the build job configured for our image.
+
+<Aside type="note">
+  For this post I will be using my <a href="https://hub.docker.com/r/alexandzors/caddy">Caddy Server</a> image as an example.
+</Aside>
+
+On the main dashboard for Jenkins click New Item > Freestyle project. Give it a name and click OK. Now enter the following info for your build job:
+
+**In Source Code management section:**
+- Repository URL: `https://github.com/abiosoft/caddy-docker.git`
+- Credentials: `Your Git credentials`
+- Branch: `*/master`
+- Repository Browser: `Auto`
+
+**In Build Triggers:**
+- Poll SCM: `Checked`
+- Schedule: `H */5 * * *`
+
+**In Build Environment:**
+- Add timestamps to Console Output: `Checked`
+
+**In Build:**
+- Enable Docker Build and Publish
+- Repository Name: `alexandzors/caddy` (Change this to match your image)
+- Tag: `latest` (Image tag)
+- Docker Host URI: `unix://var/run/docker.sock`
+- Registry Credentials: `Docker hub credentials`
+
+**Advanced:**
+- No Cache: `Checked`
+- Force Pull: `Checked`
+- Create fingerprints: `Checked`
+- Skip tag as latest: `Checked` (If you did not specify a tag above)
+- Build Context: Folder the container should be built from. (Usually same as the Dockerfile location.)
+- Additional Build Arguments: include any build args for the image (e.g. `--build-arg plugins="plugin,plugin"`)
+- Dockerfile Path: `./Dockerfile` (location of the Dockerfile in the git repo)
+
+Click Apply and you now have a build job configured.
+
+Now that we have our build job configured we can kick it off by returning to the main dashboard, clicking on the new job, and then clicking `build now`. Build activity can be seen in the build stats (**S**) column. The status column indicates when your build is in progress, completed, or failed. You can see the build log by clicking on the build job and then clicking on `Console Output`.
+
+## Optional Build Steps.
+
+I actually have my docker images building on a different machine than Jenkins as I did not want to bloat the storage on my main docker host. I did this by exposing the Docker API via TCP on the builder machine, and then told Jenkins to use the TCP Socket as the Docker Host URI. (e.g. `tcp://10.8.8.65:2375`)
+
+After each build is completed, I use the `Execute shell script on remote host using ssh` plugin to execute the command `yes | docker image prune`. This removes all dangling docker images, etc., which frees up space on the builder machine (aka garbage collection).
+
+If you want to build Jenkins with Docker already installed, I have a Dockerfile hosted in my git repo <a href="https://github.com/alexandzors/things/tree/master/Docker/Custom-Containers/jenkins">here</a>.

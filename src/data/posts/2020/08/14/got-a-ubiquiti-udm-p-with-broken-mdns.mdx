@@ -1,0 +1,88 @@
+---
+publishDate: 2020-08-14T13:00:00-04:00
+title: "Got A Ubiquiti UDM-P With Broken mDNS?"
+excerpt: "If you have a Ubiquiti UDM-P and are having issues with mDNS, this post will help you fix it."
+category: Homelab
+tags:
+  - dream machine pro
+  - mDNS
+  - ubiquiti
+  - unifi
+author: Alexander
+image: '~/assets/images/banners/default_banner.webp'
+comments: true
+---
+
+import { Image } from 'astro:assets';
+import ImgDesc from 'src/components/custom/ImgDesc.astro';
+import SkipAnchor from 'src/components/custom/SkipAnchor.astro';
+import FTCDisclaimer from 'src/components/custom/FTCDisclaimer.astro';
+import Aside from '~/components/widgets/Aside.astro';
+
+import udmpSSH from './udmp-ssh.webp';
+import udmpPodman from './podman-ps.webp';
+import multicastRelay from './multicast-relay-logs.webp';
+
+<Aside type="danger">
+  This work around no longer works as podman was removed from Unifi OS (Underlying OS for Unifi routers). This post is kept, in its entirety, for historical purposes only. For this reason, comments have been disabled.
+</Aside>
+
+<hr class="my-12 mx-auto w-1/4 border-4 rounded-full border-primary motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" />
+
+If you answered yes to the question in the title, you are probably experiencing the inability to cast media properly to devices located on a IoT VLAN. Well you’re in luck! An awesome member of the Ubiquiti community <a href="https://github.com/scyto/multicast-relay">created a docker container</a> for the <a href="https://github.com/alsmith/multicast-relay">multicast-relay service</a> that can be deployed on the UDM-P.
+
+<Aside type="note">
+  This mostly fixes the mDNS relay issues that the UDM-P experiences. However, apparently with firmware 1.8+ it’s supposedly being fixed and this container is not really required. But it’s Ubiquiti so no idea how long until they actually fix it.
+</Aside>
+
+Setting up the container is rather easy. However you need to setup SSH access to your UDM-P. Click <a href="https://help.ui.com/hc/en-us/articles/360049612874-UniFi-UDM-How-to-Login-to-the-Dream-Machine-using-SSH#:~:text=Frequently%20Asked%20Questions%20%28FAQ%29%20%20%20Device%20,of%20Ubiquiti%20SSO%20account%20used%20to%20...%20">here</a> to see Ubiquiti’s docs on enabling SSH on your device.
+
+## Deploying the Container
+
+Once you have SSH enabled log into your UDM-P via a SSH enabled console. I use the Windows Terminal app with PowerShell 7 and the Windows OpenSSH client.
+
+```shell
+ssh root@ur.udm.ip.here
+```
+
+Once you accept the connection you will get access to the UDM-P’s CLI. From here we can run the following command to get the info we need for the container.
+
+<Image src={udmpSSH} alt="UDM-P SSH Session" class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc>UDM-P SSH Session welcome screen</ImgDesc>
+
+```shell
+ifconfig
+```
+
+This command will return all of your network interfaces.
+
+*You will want to make note of the two bridge interfaces of the networks you want mDNS to route between via the container. For me it’s br0 and br2.*
+
+Once we have the interfaces, we can deploy the container. Since the UDM-P uses Podman rather than Docker, we need to change up the command a bit to make it work. See <a href="https://medium.com/technopanti/docker-vs-podman-c03359fabf77">here</a> for Docker vs Podman.
+
+```shell
+podman run -rm -it --network=host -e INTERFACES="br0 br2" --restart=always --name ssdp-relay scyto/multicast-relay
+```
+
+Once the command is executed, an ID is returned for the container verifying that it was deployed. To actually verify it is running, we can run:
+
+```shell
+podman ps
+```
+
+<Image src={udmpPodman} alt="UDM-P Podman Container" class="rounded-lg shadow-lg flex mx-auto" />
+<ImgDesc>fervent_grothendieck is the mDNS relay container.</ImgDesc>
+
+To see the container logs we can run:
+
+```shell
+podman logs -f container_name
+```
+
+If the container is properly running you will see messages in the log that look similar to this image:
+
+<Image src={multicastRelay} alt="UDM-P Podman Container Logs" class="rounded-lg shadow-lg flex mx-auto" />
+
+To exit the log, hit CTRL+C.
+
+Now that the mDNS relay service is running, try and connect to your device from your main LAN. You should now be able to see your devices. Just note that if your router’s firewall is blocking established/related connections between your main LAN and IoT VLAN you won’t be able to connect.

@@ -1,0 +1,23 @@
+---
+publishDate: 2019-03-13T15:42:34-04:00
+title: "HDD Failure Update"
+excerpt: "Update on a recent HDD failure."
+category: Updates
+author: Alexander
+image: '~/assets/images/banners/default_banner.webp'
+comments: true
+---
+
+import Aside from '~/components/widgets/Aside.astro';
+
+Ok so a few weeks ago I suffered a partial HDD failure. Basically the HDD hosting my 2 Docker VMs started producing a ton of bad sectors which caused partial corruption on my VMs. This in turn caused issues with containers that read persistent data volumes. On a good note, this HDD was a WD Blue 500GB which was almost 7 years old before it started having issues.
+
+Now due to this failure my entire Grafana metrics system/stack got corrupted causing me to have to start from scratch. Which is what I have now done.
+
+<Aside title="Note" type="note">
+  There used to be pictures of my Grafana dashboard here but unfortunately they have been lost to time. :cry:
+</Aside>
+
+So instead of having a single supermassive dashboard I decided to create an overview dashboard that just houses alert panels that pull alerts from other dashboards. This gives me the ability to, at a glance, see what's going on. I can then click each alert to take me to their respective panels.
+
+**This is far from done.** I plan on expanding my Hyper-V stats as well as my System Alerts. I also need to add my remote seedbox stats and monitoring for my Virtualized AD network and game servers.
