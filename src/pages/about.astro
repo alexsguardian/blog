@@ -7,6 +7,7 @@ import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import { footerData } from '~/navigation';
 import aiDisclosureImage from '~/assets/images/AI-P.png';
+import { isInternalLink, externalLinkRel } from '~/utils/links';
 
 const socialLinks = footerData.socialLinks.filter((link) => link.ariaLabel !== 'RSS');
 
@@ -304,6 +305,8 @@ const metadata = {
               <div class="mt-4">
                 <a
                   href={action.href}
+                  target={isInternalLink(action.href) ? undefined : '_blank'}
+                  rel={isInternalLink(action.href) ? undefined : externalLinkRel(action.href)}
                   class="inline-flex items-center justify-center px-6 py-2 text-center text-white hover:text-white bg-primary hover:bg-[--aw-color-secondary] dark:bg-primary-700 dark:hover:bg-[--aw-color-secondary] rounded-md shadow-md"
                 >
                   {action.text}
