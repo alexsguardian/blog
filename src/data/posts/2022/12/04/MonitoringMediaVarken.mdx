@@ -29,7 +29,7 @@ Varken is no longer maintained by the original developer. As such I will not be 
 This post is currently using an *unsupported* custom dev build of Varken, that utilizes a pull request, which adds support for InfluxDB v2. It also is using a custom dashboard (created by me) that uses Flux queries instead of the old InfluxQL language. Both are not officially supported by the dev team at the moment. Varken stable and dev still use InfluxDB v1.8 which this post does not cover.
 </Aside>
 
-Have you ever wanted to easily monitor your backend apps that service your media server? Well if you are already running [InfluxDB](https://www.influxdata.com/) and [Grafana](https://grafana.com/) then do I have a cool utility for you! [Varken](https://github.com/Boerderij/Varken) is a utility app that lets you gather data from your backend media server applications and send this data to InfluxDB. You can then take this data and visualize it via Grafana. If you have followed my [Grafana guide](/posts/2022/07/22/Grafana-GettingStarted) series then getting this setup will be a breeze. If not make sure you already have InfluxDB and Grafana setup and communicating! You will also need one or more of the following applications installed, configured, and running to gather data from.
+Have you ever wanted to easily monitor your backend apps that service your media server? Well if you are already running [InfluxDB](https://www.influxdata.com/) and [Grafana](https://grafana.com/) then do I have a cool utility for you! [Varken](https://github.com/Boerderij/Varken) is a utility app that lets you gather data from your backend media server applications and send this data to InfluxDB. You can then take this data and visualize it via Grafana. If you have followed my [Grafana guide](/posts/2022/07/22/grafana-gettingstarted) series then getting this setup will be a breeze. If not make sure you already have InfluxDB and Grafana setup and communicating! You will also need one or more of the following applications installed, configured, and running to gather data from.
 
 - [Sonarr](https://sonarr.tv/)
 - [Radarr](https://radarr.video/)
@@ -135,7 +135,7 @@ networks:
 ```
 
 <Aside type="tip">
-If you did not follow my [Grafana guide](/posts/2022/07/22/Grafana-GettingStarted/) then you can omit the networking portion. (e.g. remove both `networks:` config options)
+If you did not follow my [Grafana guide](/posts/2022/07/22/grafana-gettingstarted/) then you can omit the networking portion. (e.g. remove both `networks:` config options)
 </Aside>
 
 You can then save and close the file by hitting `CTRL + X` then `y`.

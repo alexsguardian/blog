@@ -41,7 +41,7 @@ Setting up the container is rather easy. However you need to setup SSH access to
 
 Once you have SSH enabled log into your UDM-P via a SSH enabled console. I use the Windows Terminal app with PowerShell 7 and the Windows OpenSSH client.
 
-```shell
+```shell showLineNumbers=false
 ssh root@ur.udm.ip.here
 ```
 
@@ -50,7 +50,7 @@ Once you accept the connection you will get access to the UDM-P’s CLI. From he
 <Image src={udmpSSH} alt="UDM-P SSH Session" class="rounded-lg shadow-lg flex mx-auto" />
 <ImgDesc>UDM-P SSH Session welcome screen</ImgDesc>
 
-```shell
+```shell showLineNumbers=false
 ifconfig
 ```
 
@@ -60,13 +60,13 @@ This command will return all of your network interfaces.
 
 Once we have the interfaces, we can deploy the container. Since the UDM-P uses Podman rather than Docker, we need to change up the command a bit to make it work. See <a href="https://medium.com/technopanti/docker-vs-podman-c03359fabf77">here</a> for Docker vs Podman.
 
-```shell
+```shell showLineNumbers=false
 podman run -rm -it --network=host -e INTERFACES="br0 br2" --restart=always --name ssdp-relay scyto/multicast-relay
 ```
 
 Once the command is executed, an ID is returned for the container verifying that it was deployed. To actually verify it is running, we can run:
 
-```shell
+```shell showLineNumbers=false
 podman ps
 ```
 
@@ -75,7 +75,7 @@ podman ps
 
 To see the container logs we can run:
 
-```shell
+```shell showLineNumbers=false
 podman logs -f container_name
 ```
 

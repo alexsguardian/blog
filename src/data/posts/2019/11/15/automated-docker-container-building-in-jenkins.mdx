@@ -43,13 +43,13 @@ First I had to get Jenkins up and running. I decided to deploy Jenkins as a dock
   Using docker containers allows you to separate application dependency bloat from your host OS as each container contains all of the necessary services/packages for your desired application. It also gives you 'finer' control over application security.
 </Aside>
 
-```shell
+```shell showLineNumbers=false
 docker run --name=jenkins -p 8080:8080 -p 50000:50000 -v /var/run/docker.sock:/var/run/docker.sock -v jenkins:/var/jenkins_home/ -e TZ=America/New_York jenkins/jenkins
 ```
 
 After the image downloads and the container is running we can access the Jenkins UI via `http://hostname:8080` and run through the setup process wizard. Once Jenkins is set up and configured with what we want, we will need to install Docker into the Jenkins container so we can build docker images. To do this we need to enter the Jenkins container CLI.
 
-```shell
+```shell showLineNumbers=false
 docker exec -it jenkins bin/bash
 ```
 

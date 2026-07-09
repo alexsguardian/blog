@@ -22,7 +22,9 @@ import FTCDisclaimer from '~/components/custom/FTCDisclaimer.astro'
 import { Image } from 'astro:assets'
 import gh_actions_jekyll from 'gh-actions-jekyll.webp'
 
-In my GitHub Actions, "Getting your feet wet", guide series I went over how to [build a docker container](/posts/2022/06/12/AutoGHActionsDocker/), [automatically updating it](/posts/2022/06/20/AutoGHActionsDiun/) using a app called [Diun](https://crazymax.dev/diun/), [deploying the container update](/posts/2022/06/25/AutoGHDeployLinode/) to a VM in [Linode](https://linode.com), and [creating a releasable binary](/posts/2022/06/30/AutoGHBinary/). All based on the web server I use for my homelab, [Caddy](https://caddyserver.com). This post was not originally planned to be apart of the series but I am including it as an example of a more, "advanced", actions deployment. By default [Jekyll](https://jekyllrb.com/) deploys to [GitHub Pages](https://pages.github.com/) which is really nice if you do not want to spin up your own web server.
+<FTCDisclaimer />
+
+In my GitHub Actions, "Getting your feet wet", guide series I went over how to [build a docker container](/posts/2022/06/12/autoghactionsdocker/), [automatically updating it](/posts/2022/06/20/autoghactionsdiun/) using a app called [Diun](https://crazymax.dev/diun/), [deploying the container update](/posts/2022/06/25/autoghdeploylinode/) to a VM in [Linode](https://linode.com), and [creating a releasable binary](/posts/2022/06/30/autoghbinary/). All based on the web server I use for my homelab, [Caddy](https://caddyserver.com). This post was not originally planned to be apart of the series but I am including it as an example of a more, "advanced", actions deployment. By default [Jekyll](https://jekyllrb.com/) deploys to [GitHub Pages](https://pages.github.com/) which is really nice if you do not want to spin up your own web server.
 
 For me though I wanted to host it myself. The process for this was mostly straight forward as Jekyll already includes the ability to self host. The diagram below demonstrates the GitHub Actions flow for both the default deployment to pages and my deployment to a Linode VM.
 
@@ -37,7 +39,7 @@ If you want to use the actions file below you will need the following items comp
 * Have a VM running that is accessible by SSH from the internet (WAN).
     * I recommend [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5) if you are just starting out.
 * Have a user account created on the VM for actions to log into via SSH.
-    * You can check out my post, [here](/posts/2022/06/25/AutoGHDeployLinode/#setting-up-the-vm), which details this process.
+    * You can check out my post, [here](/posts/2022/06/25/autoghdeploylinode/#setting-up-the-vm), which details this process.
 * Have a domain registered and pointing to the public (WAN) IP of the VM.
 * Have a web server installed and setup to serve from the directory the blog will be in.
     * I am using [Caddy](https://caddyserver.com) to serve the blog directory.
@@ -231,12 +233,10 @@ blog.alexsguardian.net {
 This post is merely an example for the [GitHub Actions](/guides/#github-actions) guide series. I actually use the above workflow to deploy this blog from GitHub, so it does work! If you have any questions, or a suggestion, feel free to reach out via a comment or email!
 
 <Aside type="note">
-If you are using the Linode Cloud Firewall, check out [my post](/posts/2024/02/25/GHActions-LinodeCLI/) about using Linode CLI to update it during the workflow run!
+If you are using the Linode Cloud Firewall, check out [my post](/posts/2024/02/25/ghactions-linodecli/) about using Linode CLI to update it during the workflow run!
 </Aside>
 
 ----
 ## Affiliate Links
 
 - [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)💜
-
-<FTCDisclaimer />

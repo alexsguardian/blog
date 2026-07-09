@@ -20,7 +20,9 @@ import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
 import FTCDisclaimer from '~/components/custom/FTCDisclaimer.astro'
 
-This is part 3 of this series so if you haven't completed [part 1](/posts/2022/06/12/AutoGHActionsDocker/) and [part 2](/posts/2022/06/20/AutoGHActionsDiun/) yet, go back if you want to follow along. In this part we will be updating our Caddy pipeline to deploy updates from Actions to a VM running in [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)'s cloud. As we are using Docker to run Caddy this will be very easy. In Part 4 we will be building a binary and pushing it to the Linode VM instead, which is slightly more complicated.
+<FTCDisclaimer />
+
+This is part 3 of this series so if you haven't completed [part 1](/posts/2022/06/12/autoghactionsdocker/) and [part 2](/posts/2022/06/20/autoghactionsdiun/) yet, go back if you want to follow along. In this part we will be updating our Caddy pipeline to deploy updates from Actions to a VM running in [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)'s cloud. As we are using Docker to run Caddy this will be very easy. In Part 4 we will be building a binary and pushing it to the Linode VM instead, which is slightly more complicated.
 
 <Aside type="note">
 Note: This is merely a guide to get started. These are the base steps to get you through the door. I'd recommend after you complete this guide that you review your security setup for your VM. As well as locking down access (disabling root login, etc). I will be covering some hardening topics later and will link them here when they are ready.
@@ -43,7 +45,7 @@ You should have these items completed and set up before trying to follow this po
 - Have a [Linux VM](https://www.linode.com/docs/guides/creating-a-compute-instance/) running in Linode's Cloud with [Docker Engine installed](https://docs.docker.com/engine/install/).
   - Have [SSH Key Auth setup](https://www.linode.com/docs/guides/set-up-and-secure/#harden-ssh-access) on the VM.
   - Have a secondary SSH key pair set up.
-- Have followed the previous<sup>[1](/posts/2022/06/12/AutoGHActionsDocker/)</sup> parts<sup>[2](/posts/2022/06/20/AutoGHActionsDiun/)</sup> in this series.
+- Have followed the previous<sup>[1](/posts/2022/06/12/autoghactionsdocker/)</sup> parts<sup>[2](/posts/2022/06/20/autoghactionsdiun/)</sup> in this series.
 - Have a Domain registered and an A record pointed to the public IP of your Linode VM.
   - I use [Google Domains](https://domains.google/) with DNS handled by [Cloudflare](https://developers.cloudflare.com/dns/zone-setups/full-setup/setup/).
 
@@ -197,6 +199,8 @@ Now edit the Caddyfile and add the following content (same quick start from [Cad
 nano ~/caddy/config/Caddyfile
 ```
 
+<br />
+
 ```shell title="Caddyfile"
 #Caddyfile
 yourdomain.tld
@@ -231,7 +235,55 @@ Save and close the file by hitting `CTRL + X` then `y`. We can leave the current
 Now that we have the VM file structure ready to go, we can update our GitHub Actions pipeline to automatically update our docker container on image updates. Navigate to our actions repository and open the `actions.yml` file with your favorite text editor. Now add the following lines at the end of the file:
 
 ```yaml title="actions.yml"
-[Previous YAML content...]
+### This section defines the action ###
+
+# Name of the action
+name: Caddy
+
+on:
+  # Allows you to set off the action via a POST request to the GitHub workflow API
+  repository_dispatch:
+    types: caddy
+  # Allows you to manually run the action from inside the Actions tab of the repo
+  workflow_dispatch:
+
+# See https://docs.github.com/en/actions/using-workflows/triggering-a-workflow for more options
+
+### This section defines the job steps for the action ###
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Login to Docker Hub using repo secrets
+      - name: Docker Hub Login
+        id: login_docker
+        if: always()
+        run: |
+          echo ${{ secrets.DOCKER_HUB_PW }} | docker login -u ${{ secrets.DOCKER_HUB_USR }} --password-stdin
+      # Build docker image using the Dockerfile
+      - name: Build Docker Image
+        id: build_docker
+        if: success()
+        run: |
+          docker build -f ./Dockerfile -t ${{ secrets.DOCKER_HUB_USR }}/caddy:latest .
+      # Push docker container to Docker Hub
+      - name: Push Docker Image
+        id: push_docker
+        if: success()
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USR }}/caddy:latest
+      # ADD LINES BELOW THIS ONE
+      # // DEPLOY TO VM
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LINODEhost }}
+          username: ${{ secrets.LINODEuser }}
+          key: ${{ secrets.LINODEkey }}
+          port: 22
+          script:
+            cd ~/caddy && docker compose down && docker compose pull && docker compose up -d
 ```
 
 <Aside type="tip">
@@ -286,7 +338,7 @@ docker compose up
 Running `docker compose up` without the `-d` switch runs the container in your current terminal session. It is useful when troubleshooting as you can watch the container's log output live. When you exit (CTRL+C) the session the container will stop. Add the `-d` switch to run in detached mode.
 </Aside>
 
-If it starts up with no errors, terminate the container using `CTRL+C`. Then double check your action's file commands for spelling mistakes during the container running portion under the "*Deploy to VM*" step. As always, if you run into issues, let me know in the comments or reach out via email and I'll gladly walk you through it! Check out [part 4](/posts/2022/06/30/AutoGHBinary/) where we change up the pipeline to build and release a binary version of Caddy.
+If it starts up with no errors, terminate the container using `CTRL+C`. Then double check your action's file commands for spelling mistakes during the container running portion under the "*Deploy to VM*" step. As always, if you run into issues, let me know in the comments or reach out via email and I'll gladly walk you through it! Check out [part 4](/posts/2022/06/30/autoghbinary/) where we change up the pipeline to build and release a binary version of Caddy.
 
 *Thanks to my good friend [Stefan](https://github.com/StefanMarAntonsson) for helping proof this post series!*
 
@@ -295,5 +347,3 @@ If it starts up with no errors, terminate the container using `CTRL+C`. Then dou
 
 - [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)💜
 - [Private Internet Access](https://www.privateinternetaccess.com/pages/buy-a-vpn/1218buyavpn?invite=U2FsdGVkX1-pOm5kbEAhmvX-8nOFQIjNxP5AlMFdHlo%2Cn-IHMcG_0Ut99i-JHjgH_TLJ-pA)
-
-<FTCDisclaimer /> 

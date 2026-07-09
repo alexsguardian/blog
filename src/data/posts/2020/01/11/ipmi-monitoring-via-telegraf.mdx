@@ -28,7 +28,7 @@ First you will need to download and install the ipmitool. I am running this on a
 
 ## Installing IPMItool
 
-```shell
+```shell showLineNumbers=false
 sudo apt-get install ipmitool -y
 ```
 
@@ -38,7 +38,7 @@ To check and see if it installed correctly you can run `ipmitool -H IP.OF.SERVER
 
 **<a href="/guides">Install Telegraf</a> and edit the telegraf.conf file.**
 
-```shell
+```shell showLineNumbers=false
 nano /etc/telegraf/telegraf.d/ipmi-input.conf
 ```
 
@@ -57,7 +57,7 @@ Note, you can have multiple IPMI inputs, just copy everything and paste it a sec
 
 **Save and close ipmi-input.conf and start telegraf.**
 
-```shell
+```shell showLineNumbers=false
 sudo systemctl start telegraf.service
 ```
 

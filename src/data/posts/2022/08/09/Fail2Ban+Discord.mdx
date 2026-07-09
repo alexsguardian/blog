@@ -21,7 +21,7 @@ Fail2Ban is a service that scans files like `/var/log/auth.log`, looking for fai
 Having a secure authentication set up is recommended along side fail2ban to reduce the risk of a nefarious user gaining access to your system.
 </Aside>
 
-In my previous post, [SSH Login Logging to Discord via Webhooks](/posts/2022/07/02/LoggingSSHtoDiscord/), we set up `pam.d` to log SSH logins to Discord over a webhook. We can also do this with Fail2Ban using a custom action. If you already have Fail2Ban installed you can __[skip ahead](#configuring-fail2ban)__ to the configuration.
+In my previous post, [SSH Login Logging to Discord via Webhooks](/posts/2022/07/02/loggingsshtodiscord/), we set up `pam.d` to log SSH logins to Discord over a webhook. We can also do this with Fail2Ban using a custom action. If you already have Fail2Ban installed you can __[skip ahead](#configuring-fail2ban)__ to the configuration.
 
 ## Installing Fail2Ban
 
@@ -247,13 +247,13 @@ Once you confirm it is working you can re-edit your `/etc/fail2ban/jail.local` c
 
 If you want to get an @ notification when a host is banned you can update the `/etc/fail2ban/action.d/discord_notifications.conf` action to include an @ in the payload. To do this edit the file and replace:
 
-```shell title="discord_notifications.conf"
+```shell title="discord_notifications.conf" showLineNumbers=false
 -d '{"username":"Fail2Ban", "content":":bell: <hostname> - **[<name>]** **BANNED** IP: `<ip>` for <bantime> hours after **<failures>** failure(s). Here is some info about the IP: https://db-ip.com/<ip>. Unban by running: `fail2ban-client unban <ip>`"}'
 ```
 
 with:
 
-```shell title="discord_notifications.conf"
+```shell title="discord_notifications.conf" showLineNumbers=false
 -d '{"username":"Fail2Ban", "content":"<@your-discord-user-id> :bell: <hostname> - **[<name>]** **BANNED** IP: `<ip>` for <bantime> hours after **<failures>** failure(s). Here is some info about the IP: https://db-ip.com/<ip>. Unban by running: `fail2ban-client unban <ip>`"}'
 ```
 

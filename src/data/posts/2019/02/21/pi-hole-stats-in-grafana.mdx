@@ -28,37 +28,37 @@ Now there are probably a few ways to do this but for my dashboard I ended up <a 
 
 **First we need to install python-pip. So SSH to your Pi-Hole server and run:**
 
-```shell
+```shell showLineNumbers=false
 sudo apt-get install python-pip -y
 ```
 
 **Now create a new directory for the script to live in.**
 
-```shell
+```shell showLineNumbers=false
 mkdir /opt/pihole-influx
 ```
 
 **Clone the pi-hole-influx repo.**
 
-```shell
+```shell showLineNumbers=false
 git clone https://github.com/janw/pi-hole-influx.git /opt/pihole-influx
 ```
 
 **Once that finishes, cd to /pihole-influx and run:**
 
-```shell
+```shell showLineNumbers=false
 pip install -r requirements.txt
 ```
 
 **Now clone the config.example.ini to config.ini.**
 
-```shell
+```shell showLineNumbers=false
 cp config.example.ini config.ini
 ```
 
 **Edit the config.ini file to match your environment.**
 
-```shell
+```shell showLineNumbers=false
 nano config.ini
 ```
 
@@ -94,7 +94,7 @@ curl -XPOST "http://<ip.of.influx.db>:8086/query?u=<admin user>&p=<password>" --
 
 **Now launch piholeinflux.py.**
 
-```shell
+```shell showLineNumbers=false
 ./piholeinflux.py
 ```
 
@@ -104,7 +104,7 @@ You can set up piholeinflux.py to run as a systemd service so that it will auto 
 
 **Create the piholeinflux.service file.**
 
-```shell
+```shell showLineNumbers=false
 nano piholeinflux.service
 ```
 
@@ -199,7 +199,7 @@ timeout = 10
 
 Copy both of the above blocks into the same folder.
 
-```shell
+```shell showLineNumbers=false
 docker build -t your-name/of-image .
 ```
 

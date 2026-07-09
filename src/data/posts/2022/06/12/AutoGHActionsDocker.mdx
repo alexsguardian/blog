@@ -13,7 +13,7 @@ tags:
   - actions
 author: Alexander
 comments: true
-permalink: /posts/2022/06/12/AutoGHActionsDocker/
+permalink: /posts/2022/06/12/autoghactionsdocker/
 ---
 import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
@@ -22,6 +22,8 @@ import GH_CREATE_REPO from 'gh-create-repo.webm'
 import GH_CLONE_REPO from 'gh-clone-repo.webm'
 import SkipAnchor from '~/components/custom/SkipAnchor.astro'
 import FTCDisclaimer from '~/components/custom/FTCDisclaimer.astro'
+
+<FTCDisclaimer />
 
 I used to run a local Jenkins set up to automatically build and push my custom docker containers to Docker Hub. This was complicated to set up and maintain. Jenkins would sometimes throw errors or a plugin update would break a workflow. To fix this headache I ended up moving my build environment to [GitHub Actions](https://github.com/features/actions). This also made it even easier to integrate configs via git as it was all in a single repository. This four part post series will get you up and running with GitHub Actions and Docker container building. The fourth part will demonstrate how to build and release a binary version. If you are just interested in the building process of the container image you can <SkipAnchor text="Skip ahead" anchor="#creating-the-files" icon="" />
 
@@ -56,7 +58,7 @@ The first thing we need to do is get our repository up and going on GitHub. The 
 
 Once your repository is created you'll want to clone it to your environment. Open Windows Terminal (mine defaults to PowerShell 7 though the commands should be similar on older versions) and run the following commands:
 
-```shell showLineNumbers=false
+```powershell showLineNumbers=false
 #PowerShell 7.2
 mkdir $env.USERPROFILE/Documents/git
 cd $env.USERPROFILE/Documents/git
@@ -64,7 +66,7 @@ cd $env.USERPROFILE/Documents/git
 
 Now clone the repository by running:
 
-```shell showLineNumbers=false
+```powershell showLineNumbers=false
 #PowerShell 7.2
 git clone https://github.com/yourusername/yourgitrepo.git
 ```
@@ -78,7 +80,7 @@ If it asks you to login enter your GitHub username and then your PAT as your pas
 
 Change your directory to the newly cloned git repo.
 
-```shell showLineNumbers=false
+```powershell showLineNumbers=false
 #PowerShell 7.2
 cd $env.USERPROFILE/Documents/git/yourgitrepo
 ```
@@ -241,6 +243,4 @@ Now that we have our base pipeline setup and functional we can start doing some 
 ## Affiliate Links
 
 - [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)💜
-- [Private Internet Access](https://www.privateinternetaccess.com/pages/buy-a-vpn/1218buyavpn?invite=U2FsdGVkX1-pOm5kbEAhmvX-8nOFQIjNxP5AlMFdHlo%2Cn-IHMcG_0Ut99i-JHjgH_TLJ-pA)
-
-<FTCDisclaimer /> 
+- [Private Internet Access](https://www.privateinternetaccess.com/pages/buy-a-vpn/1218buyavpn?invite=U2FsdGVkX1-pOm5kbEAhmvX-8nOFQIjNxP5AlMFdHlo%2Cn-IHMcG_0Ut99i-JHjgH_TLJ-pA) 

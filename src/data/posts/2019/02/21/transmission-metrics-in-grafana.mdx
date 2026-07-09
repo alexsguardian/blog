@@ -32,13 +32,13 @@ scrape_configs:
 
 Save and close `prometheus.yml`. Now create the Transmission-Exporter.
 
-```shell
+```shell showLineNumbers=false
 docker run -d -p 19091:19091 -e TRANSMISSION_ADDR=http://<ip.of.transmission.client>:<port> metalmatze/transmission-exporter
 ```
 
 You'll need to change `ipoftransmission:<port>` to the ip:port of your Transmission install. If you have authentication enabled you'll need to specify `-e TRANSMISSION_USERNAME=username` and `-e TRANSMISSION_PASSWORD=password` to the above command before `metalmatze/transmission-exporter`. Restart your Prometheus container so it picks up the new config. You should be able to navigate to the Prometheus web ui now and run the following query:
 
-```shell
+```shell showLineNumbers=false
 transmission_session_stats_downloaded_bytes{type="cumulative"}
 ```
 
@@ -62,7 +62,7 @@ Click `Save & Test`. If you get an error, make sure Grafana can reach Prometheus
 
 Navigate to a Dashboard you wish to add Transmission stats to and add a new singlestat panel. Under Metrics, add the following query:
 
-```shell
+```shell showLineNumbers=false
 transmission_session_stats_downloaded_bytes{type="cumulative"}
 ```
 
