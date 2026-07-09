@@ -94,7 +94,7 @@ sudo nano /etc/pam.d/sshd
 
 Add the following to the bottom of the sshd config file.
 
-```shell title="sshd"
+```shell title="sshd" showLineNumbers=false
 session   optional   pam_exec.so /sbin/sshd-login
 ```
 

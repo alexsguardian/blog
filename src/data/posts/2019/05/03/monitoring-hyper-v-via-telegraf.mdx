@@ -22,7 +22,7 @@ Now the cool thing about Telegraf on Windows is that you can basically monitor a
 
 Create a new input configuration file in the `telegraf.d` directory:
 
-```cmd
+```powershell showLineNumbers=false
 notepad C:\telegraf\telegraf.d\hyperv.conf
 ```
 
@@ -124,7 +124,7 @@ Paste the following into your new file, then save.
 
 Restart Telegraf with the new config file.
 
-```cmd
+```powershell
 net stop telegraf
 net start telegraf
 ```

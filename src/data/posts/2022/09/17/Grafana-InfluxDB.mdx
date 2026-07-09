@@ -16,7 +16,7 @@ comments: true
 import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
 
-In my [previous post](/posts/2022/07/22/Grafana-GettingStarted) of this series we deployed [Grafana](https://grafana.com), [Prometheus](https://prometheus.io), and [Node Exporter](https://github.com/prometheus/node_exporter). We also set up the dashboard in Grafana to read the data from Prometheus. In this post we will be covering the deployment of [InfluxDB](https://www.influxdata.com/products/influxdb-overview/) and [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/). 
+In my [previous post](/posts/2022/07/22/grafana-gettingstarted) of this series we deployed [Grafana](https://grafana.com), [Prometheus](https://prometheus.io), and [Node Exporter](https://github.com/prometheus/node_exporter). We also set up the dashboard in Grafana to read the data from Prometheus. In this post we will be covering the deployment of [InfluxDB](https://www.influxdata.com/products/influxdb-overview/) and [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/). 
 
 ## The Environment
 
@@ -31,7 +31,7 @@ This guide series assumes you are on Windows 10 or 11 with [Windows Terminal](ht
 - Access to a good internet connection.
 - Have a spare monitor and keyboard handy.
 - Your favorite drink and snacks within reach. ( A must for hobbies )
-- Followed my previous post __[here](/posts/2022/07/22/Grafana-GettingStarted)__.
+- Followed my previous post __[here](/posts/2022/07/22/grafana-gettingstarted)__.
 
 ## Deploying InfluxDB
 
@@ -141,7 +141,7 @@ You will be shown your API token for Telegraf. Copy this token (everything after
 
 ## Deploying Telegraf
 
-Now that we have InfluxDB running, we can deploy Telegraf to monitor our Docker containers. In my [previous post](/posts/2022/07/22/Grafana-GettingStarted) we set up [node_exporter](https://github.com/prometheus/node_exporter) for host monitoring so as an example we will only be using Telegraf for Docker. It can also do host monitoring if you wanted to replace node exporter.
+Now that we have InfluxDB running, we can deploy Telegraf to monitor our Docker containers. In my [previous post](/posts/2022/07/22/grafana-gettingstarted) we set up [node_exporter](https://github.com/prometheus/node_exporter) for host monitoring so as an example we will only be using Telegraf for Docker. It can also do host monitoring if you wanted to replace node exporter.
 
 First create the directory to house our telegraf config and compose file.
 
@@ -187,13 +187,13 @@ networks:
 nano .env
 ```
 
-```shell title=".env"
+```shell title=".env" showLineNumbers=false
 INFLUXDB_INIT_ADMIN_TOKEN=TELEGRAF_API_TOKEN
 ```
 
 Replace `TELEGRAF_API_TOKEN` with the admin token generated earlier. It should look something like this when done.
 
-```shell title="EXAMPLE .env"
+```shell title="EXAMPLE .env" showLineNumbers=false
 INFLUXDB_INIT_ADMIN_TOKEN=182jqwhgah2u5a9py5ilau5kagl28y59agt5aklh5gaklqai857yai9gu5i79595
 ```
 

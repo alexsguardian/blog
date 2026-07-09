@@ -38,7 +38,7 @@ Now trying to mimic GitHub led me down the rabbit hole with Caddy's layer 4 modu
 
 By default, Caddy does not include the layer 4 routing module. It has to be built with it. This can be done using the <a href="https://github.com/caddyserver/xcaddy" target="_blank">xcaddy tool</a> with the following command:
 
-```shell
+```shell showLineNumbers=false
 xcaddy build --with github.com/mholt/caddy-l4
 ```
 
@@ -107,7 +107,7 @@ As you can see under the global section of the Caddyfile there is a `servers > l
 
 To verify SSH is connecting over port 443 and being routed correctly to Forgejo's SSH server is as simple as running:
 
-```shell
+```shell showLineNumbers=false
 ssh -T -i ~/.ssh/forgejo_private_key -p 443 git@git.domain.com
 ```
 
@@ -147,7 +147,7 @@ caddy_caddy.2.vs59tc1v3w9g@proximacentauri    | {"level":"debug","ts":1757313012
 
 You can also see the web traffic still being proxied to Forgejo's web server port as well.
 
-```log
+```log showLineNumbers=false
 caddy_caddy.3.7g08ktgvxfy3@deltacephei    | {"level":"debug","ts":1757313013.8432958,"logger":"http.handlers.reverse_proxy","msg":"selected upstream","dial":"git_server:3000","total_upstreams":1}
 ```
 

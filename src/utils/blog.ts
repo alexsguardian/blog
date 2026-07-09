@@ -60,7 +60,8 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
     pinned = false,
   } = data;
 
-  const slug = cleanSlug(id); // cleanSlug(rawSlug.split('/').pop());
+  // Drafts skip the /yyyy/mm/dd/ nesting entirely — just /posts/<filename>, regardless of subfolder.
+  const slug = id.startsWith('drafts/') ? cleanSlug(id.split('/').pop() || id) : cleanSlug(id);
   const publishDate = new Date(rawPublishDate);
   const updateDate = rawUpdateDate ? new Date(rawUpdateDate) : undefined;
 
@@ -114,7 +115,7 @@ const load = async function (): Promise<Array<Post>> {
 
   const results = (await Promise.all(normalizedPosts))
     .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
-    .filter((post) => !post.draft);
+    .filter((post) => !post.draft || import.meta.env.DEV);
 
   return results;
 };

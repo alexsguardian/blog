@@ -18,6 +18,8 @@ import ImgDesc from '~/components/custom/ImgDesc.astro'
 import Aside from '~/components/widgets/Aside.astro'
 import FTCDisclaimer from '~/components/custom/FTCDisclaimer.astro'
 
+<FTCDisclaimer />
+
 In my [previous post](https://blog.alexsguardian.net/posts/AutoGHActionsDocker/), we got our [GitHub Actions](https://github.com/features/actions) pipeline set up and built our first Docker container image based on [Caddy](https://caddyserver.com/). In this post, we will be covering the process of automating the pipeline based on upstream changes in the parent [Caddy](https://hub.docker.com/_/caddy) Docker image. For this we will be deploying a service called [Diun](https://crazymax.dev/diun/) on a local docker machine.
 
 ## What is Diun?
@@ -142,7 +144,7 @@ curl -H "Accept: application/vnd.github.v3+json" \
 ```
 
 <Aside type="note">
-You will need a [GitHub PAT](/posts/2022/06/12/AutoGHActionsDocker/#obtaining-an-access-token-for-docker-hub) with both `repo` and `workflows` scopes enabled for the `<TOKEN>` section of the script.
+You will need a [GitHub PAT](/posts/2022/06/12/autoghactionsdocker/#obtaining-an-access-token-for-docker-hub) with both `repo` and `workflows` scopes enabled for the `<TOKEN>` section of the script.
 </Aside>
 
 `CTRL + X` then `Y` to save and close the file. Finally edit the `docker-compose.yml` file.
@@ -244,6 +246,4 @@ Let me know down below if you run into any issues and stay tuned for Part 3!
 ## Affiliate Links
 
 - [Linode](https://www.linode.com/lp/refer/?r=67f6812cc5712674183021660b122e45095f35b5)💜
-- [Private Internet Access](https://www.privateinternetaccess.com/pages/buy-a-vpn/1218buyavpn?invite=U2FsdGVkX1-pOm5kbEAhmvX-8nOFQIjNxP5AlMFdHlo%2Cn-IHMcG_0Ut99i-JHjgH_TLJ-pA)
-
-<FTCDisclaimer /> 
+- [Private Internet Access](https://www.privateinternetaccess.com/pages/buy-a-vpn/1218buyavpn?invite=U2FsdGVkX1-pOm5kbEAhmvX-8nOFQIjNxP5AlMFdHlo%2Cn-IHMcG_0Ut99i-JHjgH_TLJ-pA) 

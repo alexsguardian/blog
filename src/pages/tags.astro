@@ -4,6 +4,7 @@ import { findTagsWithOccurrences } from '~/utils/blog';
 import ContentWrapper from '~/components/custom/ContentWrapper.astro';
 import '~/components/CustomStyles.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
+import { cleanSlug } from '~/utils/permalinks';
 
 const tagsWithOccurrences = await findTagsWithOccurrences();
 const orderedTagsByUsage = Object.entries(tagsWithOccurrences).sort(([,to1], [,to2]) => to2 - to1);
@@ -11,11 +12,6 @@ const orderedTagsByUsage = Object.entries(tagsWithOccurrences).sort(([,to1], [,t
 const metadata = {
   title: 'Tags | Alex\'s Blog',
 };
-
-function slugifyTag(tag: string) {
-  // Replace dots with hyphens and spaces with hyphens
-  return tag.replace(/\./g, '-').replace(/\s+/g, '-');
-}
 ---
 
 <Layout metadata={metadata}>
@@ -29,7 +25,7 @@ function slugifyTag(tag: string) {
       <div class="flex justify-center flex-wrap gap-4 motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
         {orderedTagsByUsage.map(([tag, count]) => (
           <a
-            href={`/tags/${slugifyTag(tag)}`}
+            href={`/tags/${cleanSlug(tag)}`}
             class="group inline-block rounded-lg px-4 py-2 text-sm font-medium
               border border-gray-200 dark:border-gray-700
               transition duration-200 
